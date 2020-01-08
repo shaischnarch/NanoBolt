@@ -1,5 +1,10 @@
-#first test python file
+# first test python file
 
-from Test_Directory.Test_Class import test1
+from Kinematics import Movement_display as display
+from Kinematics.K_and_IK_calculations import *
 
-test1(15)
+
+start_point = (-35,-135,75)
+end_point = (-55,-100,-75)
+angles = calculate_movement(start_point,end_point,75,8)
+display.draw_movement(angles)
