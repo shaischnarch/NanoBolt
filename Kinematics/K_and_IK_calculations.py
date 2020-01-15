@@ -56,6 +56,33 @@ def calculate_points(start_p, end_p, height, num_of_substeps):
 
 
 
+#convert angles form radians to degrees
+def convert_angles(angles):
+	angles_deg = []
+	for i in range(len(angles)):
+		(temp_1, temp_2, temp_3) = angles[i]
+		temp_1 = degrees(temp_1)
+		temp_2 = degrees(temp_2)
+		temp_3 = degrees(temp_3)
+		##math.degrees(radian) converts into degrees
+		angles_deg.append((temp_1, temp_2, temp_3))
+	return angles_deg
+
+
+
+## recieves angles array (each angle is (theta1,theta2,theta3)) in degrees from the IK_calculations
+# this function than does the necesary conversions for the phyisical servo angles and returns said angles 
+def servo_angles(angles):
+	angles_servo = []
+	for i in range(len(angles)):
+		(temp_1, temp_2, temp_3) = angles[i]
+		temp_1 = 180 - (temp_1 + 90)
+		temp_2 = 180 - (temp_2 + 90)
+		temp_3 = 180 - temp_3
+		##see paper for the conversion explanation
+		angles_servo.append((temp_1, temp_2, temp_3))
+	return angles_servo
+
 def legIK(x, y, z):
     """
     x/y/z=Position of the Foot in Leg-Space

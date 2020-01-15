@@ -1,5 +1,5 @@
 """
-TEST CLASS
+MAIN TEST CLASS
 used to run simple tests
 
 Test #01 - simple servo test
@@ -22,9 +22,9 @@ print('servokit started')
 
 
 
-start_point = (0,-100,0)
-end_point = (50,-100,50)
-angles = calculate_movement(start_point,end_point,50,8)
+start_point = (-50,-140,-50)
+end_point = (50,-160,50)
+angles = calculate_movement(start_point,end_point,50,64)
 display.draw_movement(angles)
 
 angles_for_servos = servo_angles(convert_angles(angles))
@@ -33,4 +33,6 @@ for i in range(len(angles_for_servos)):
 		kit.servo[0].angle = temp_0
 		kit.servo[1].angle = temp_1
 		kit.servo[2].angle = temp_2
-		sleep(0.5)
+		if (i == 0):
+			time.sleep(1.5)
+		time.sleep(0.015)
