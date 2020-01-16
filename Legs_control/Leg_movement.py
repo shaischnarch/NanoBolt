@@ -4,7 +4,7 @@ this layer uses the Kinematics and inverse Kinematics of layer 0 and executes th
 physical movements of the legs
 '''
 
-from Legs_controll.Servo_controll import *
+from Legs_control.Servo_control import *
 from Kinematics import Movement_display as display
 from Kinematics.K_and_IK_calculations import *
 
