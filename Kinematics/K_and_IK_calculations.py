@@ -10,6 +10,7 @@ l2 = 20
 l3 = 80
 l4 = 80
 
+
 ## main step calculation method.
 # receives the start location of the step and end location (in (x,y,z))
 # the function also receives the height of the step as height
@@ -39,49 +40,19 @@ def calculate_points(start_p, end_p, height, num_of_substeps):
     (x2, y2, z2) = end_p
 
     # calculate each axis differential substep length
-    dx = (x2 - x1)/num_of_substeps
-    dy = (y2 - y1)/num_of_substeps
-    dz = (z2 - z1)/num_of_substeps
+    dx = (x2 - x1) / num_of_substeps
+    dy = (y2 - y1) / num_of_substeps
+    dz = (z2 - z1) / num_of_substeps
 
     # add all the points starting from i=0 up to i=num_of_substeps (endpoint)
-    for i in range((num_of_substeps+1)):
-        di = i/num_of_substeps
+    for i in range((num_of_substeps + 1)):
+        di = i / num_of_substeps
         temp_x = x1 + (dx * i)
-        temp_y = y1 + (dy * i) + (-4*height*di*di + 4*height*di)
+        temp_y = y1 + (dy * i) + (-4 * height * di * di + 4 * height * di)
         temp_z = z1 + (dz * i)
         points.append((temp_x, temp_y, temp_z))
     return points
 
-
-
-
-
-#convert angles form radians to degrees
-def convert_angles(angles):
-	angles_deg = []
-	for i in range(len(angles)):
-		(temp_1, temp_2, temp_3) = angles[i]
-		temp_1 = degrees(temp_1)
-		temp_2 = degrees(temp_2)
-		temp_3 = degrees(temp_3)
-		##math.degrees(radian) converts into degrees
-		angles_deg.append((temp_1, temp_2, temp_3))
-	return angles_deg
-
-
-
-## recieves angles array (each angle is (theta1,theta2,theta3)) in degrees from the IK_calculations
-# this function than does the necesary conversions for the phyisical servo angles and returns said angles 
-def servo_angles(angles):
-	angles_servo = []
-	for i in range(len(angles)):
-		(temp_1, temp_2, temp_3) = angles[i]
-		temp_1 = 180 - (temp_1 + 90)
-		temp_2 = 180 - (temp_2 + 90)
-		temp_3 = 180 - temp_3
-		##see paper for the conversion explanation
-		angles_servo.append((temp_1, temp_2, temp_3))
-	return angles_servo
 
 def legIK(x, y, z):
     """
@@ -117,5 +88,3 @@ def calcLegPoints(angles):
     T4 = T3 + np.array([-l4 * sin(theta1) * cos(theta23), -l4 * cos(theta1) * cos(theta23), l4 * sin(theta23), 0])
 
     return np.array([T0, T1, T2, T3, T4])
-
-

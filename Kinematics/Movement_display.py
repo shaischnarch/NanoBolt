@@ -5,6 +5,7 @@ import numpy as np
 from math import *
 import matplotlib.pyplot as plt
 from Kinematics.K_and_IK_calculations import *
+from Legs_controll import *
 
 
 ## main function for drawing a step and all its substeps
@@ -22,7 +23,6 @@ def draw_movement(angles):
     drawLeg(ax_lst[0], end_leg_points, 'ro')
     drawLeg(ax_lst[1], end_leg_points, 'ro')
 
-
     # add middle points to right graph in yellow
     # also add speculated movement to left graph
     old_leg_points = start_leg_points
@@ -36,13 +36,10 @@ def draw_movement(angles):
     ax_lst[0].plot([old_leg_points[4][0], end_leg_points[4][0]], [old_leg_points[4][2], end_leg_points[4][2]],
                    [old_leg_points[4][1], end_leg_points[4][1]], 'b')
 
-    print_angles(servo_angles(convert_angles(angles)))
+    print_angles(servo_angles(angles))
     plt.show()
-    
+
     return ax_lst
-
-
-
 
 
 ## setups the figure and ui for the leg movement
@@ -64,7 +61,6 @@ def setupUI(limit):
     return ax_lst
 
 
-
 ## draws the leg represented by p into ax with end_color as the color of the end of the foot
 # (followed by o for example 'ro' for red)
 def drawLeg(ax, p, end_color):
@@ -75,27 +71,8 @@ def drawLeg(ax, p, end_color):
     ax.plot([p[4][0]], [p[4][2]], [p[4][1]], end_color, lw=2)
 
 
-
-#prints to the terminal the angles of theta 1,2,3
+# prints to the terminal the angles of theta 1,2,3
 def print_angles(angles):
-	for i in range(len(angles)):
-		(temp1, temp2, temp3) = angles[i]
-		print("position number {}: /t theta1: {}  theta2: {}  theta3: {}".format(i,temp1,temp2,temp3))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    for i in range(len(angles)):
+        (temp1, temp2, temp3) = angles[i]
+        print("position number {}: /t theta1: {}  theta2: {}  theta3: {}".format(i, temp1, temp2, temp3))
