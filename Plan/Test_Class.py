@@ -6,8 +6,8 @@ Test #01 - simple servo test
 ment to check servo angles and connectivity
 """
 from adafruit_servokit import ServoKit
-from Kinematics import Movement_display as display
-from Kinematics.K_and_IK_calculations import *
+from Calculations import Movement_display as display
+from Calculations.All_calculations import *
 import busio
 import board
 import time

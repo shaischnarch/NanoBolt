@@ -88,3 +88,38 @@ def calcLegPoints(angles):
     T4 = T3 + np.array([-l4 * sin(theta1) * cos(theta23), -l4 * cos(theta1) * cos(theta23), l4 * sin(theta23), 0])
 
     return np.array([T0, T1, T2, T3, T4])
+
+
+
+
+## receives angles array (each angle is (theta1,theta2,theta3)) in radians from the IK_calculations
+# this function than converts said angles into degrees than does the necessary conversions
+# to get the actual physical servo angles necessary to move the legs into the correct position and returns said angles
+def servo_angles(angles_rad, side):
+    angles_deg = convert_angles(angles_rad)
+    angles_servo = []
+    for i in range(len(angles_deg)):
+        (temp_1, temp_2, temp_3) = angles_deg[i]
+        if (side == 'left'):
+            temp_1 = 180 - (temp_1 + 90)
+            temp_2 = 180 - (temp_2 + 90)
+            temp_3 = 180 - temp_3
+        else:
+            ######################### need to add ###########################
+            pass
+        ##see paper for the conversion explanation
+        angles_servo.append((temp_1, temp_2, temp_3))
+    return angles_servo
+
+
+# convert angles array form radians to degrees
+def convert_angles(angles_rad):
+    angles_deg = []
+    for i in range(len(angles_rad)):
+        (temp_1, temp_2, temp_3) = angles_rad[i]
+        temp_1 = degrees(temp_1)
+        temp_2 = degrees(temp_2)
+        temp_3 = degrees(temp_3)
+        ##math.degrees(radian) converts into degrees
+        angles_deg.append((temp_1, temp_2, temp_3))
+    return angles_deg

@@ -4,8 +4,8 @@ from mpl_toolkits import mplot3d
 import numpy as np
 from math import *
 import matplotlib.pyplot as plt
-from Kinematics.K_and_IK_calculations import *
-from Legs_control.Servo_control import *
+from Calculations.All_calculations import *
+from Excution.Servo_control import *
 
 
 ## main function for drawing a step and all its substeps

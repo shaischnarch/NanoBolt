@@ -1,7 +1,7 @@
 # first test python file
 
-from Kinematics import Movement_display as display
-from Kinematics.K_and_IK_calculations import *
+from Calculations import Movement_display as display
+from Calculations.All_calculations import *
 
 
 start_point = (0,-100,0)
