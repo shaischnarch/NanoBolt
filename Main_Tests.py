@@ -27,7 +27,7 @@ end_point = (50,-160,50)
 angles = calculate_movement(start_point,end_point,50,64)
 display.draw_movement(angles)
 
-angles_for_servos = servo_angles(convert_angles(angles))
+angles_for_servos = servo_angles(angles, 'left')
 for i in range(len(angles_for_servos)):
 		(temp_0, temp_1, temp_2) = angles_for_servos[i]
 		kit.servo[0].angle = temp_0
