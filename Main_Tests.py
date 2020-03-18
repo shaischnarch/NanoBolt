@@ -22,10 +22,10 @@ print('servokit started')
 
 
 
-start_point = (-50,-140,-50)
-end_point = (50,-160,50)
-angles = calculate_movement(start_point,end_point,50,64)
-display.draw_movement(angles)
+start_point = (0,-150,-90)
+end_point = (0,-150,90)
+angles = calculate_movement(start_point,end_point,0,64)
+#display.draw_movement(angles)
 
 angles_for_servos = servo_angles(angles, 'left')
 for i in range(len(angles_for_servos)):
