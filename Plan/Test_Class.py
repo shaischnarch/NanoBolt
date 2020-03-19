@@ -34,3 +34,34 @@ for i in range(len(angles_for_servos)):
 		kit.servo[1].angle = temp_1
 		kit.servo[2].angle = temp_2
 		sleep(0.5)
+
+
+
+
+
+
+
+"""
+from time import sleep
+
+from approxeng.input.dualshock4 import DualShock4
+from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
+
+
+while True:
+    hue = 0.0
+    try:
+        # Force waiting for a DS4 controller, as that's the only one with the call
+        # to set the light bar in this way.
+        with ControllerResource(ControllerRequirement(require_class=DualShock4)) as ds4:
+            while ds4.connected:
+                left_x,left_y = ds4['lx', 'ly']
+                left_x = round(left_x*5)
+                left_y = round(left_y*5)
+                print(str(left_x) + '\t' + str(left_y))
+                sleep(0.5)
+    except IOError:
+        # No DS4 controller found, wait for a bit and try again
+        print('Waiting for a DS4 controller connection')
+        sleep(1)
+"""
