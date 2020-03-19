@@ -1,21 +1,21 @@
 from Plan.Controller import *
+from Main_directory import Settings
 from time import sleep
 
 # (end_point, num_of_substeps, height, substep_delay, is_changed, shut_down) = oneLegPlan(current_leg_location, is_finished_step)
 
 
 # initialization
-max_delay = 0.05
+max_delay = Settings.max_delay
+min_delay = Settings.min_delay
 num_of_substeps = 32
 height = 0
 substep_delay = 0
 is_changed = 0
 shut_down = 0
-type = 'forward'  # type = [forward, backward, sit, stand, plank]
-speed = 'fast'  # speed = [slow, fast]
-ps4_signal = 0 ## 0 means no signal was received 1 means circle was received
 
 
+"""
 ### V 1.0
 
 def plan_movement(current_leg_location, is_finished_step):
@@ -74,12 +74,13 @@ def plan_movement(current_leg_location, is_finished_step):
         is_changed = 0
 
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
-
+"""
 
 ##### V 1.1
 ## for now a speed change is sent back to the main via a change of substep_delay
-def plan_movement(current_leg_location, is_finished_step):
+def plan_movement(current_leg_location, is_finished_step, ds4):
     global max_delay
+    global min_delay
     global num_of_substeps
     global height
     global substep_delay
@@ -88,19 +89,13 @@ def plan_movement(current_leg_location, is_finished_step):
 
     end_point = current_leg_location
 
-    (is_connected, left_x, left_y, right_x, right_y, buttons_pressed, granularity) = controller_call()
-
-    ## for now if no signal stop everything
-    while (is_connected == 0):
-        print('Waiting for a DS4 controller connection')
-        sleep(1)
-        (is_connected, left_x, left_y, right_x, right_y, buttons_pressed, granularity) = controller_call()
+    (is_connected, left_x, left_y, right_x, right_y, buttons_pressed) = controller_call(ds4)
 
     if (left_y <= 0):
         shut_down = 1
     else:
         shut_down = 0
-        substep_delay = max_delay - (max_delay / granularity)*left_y
+        substep_delay = max_delay - ((max_delay-min_delay) / granularity)*left_y
 
 
 

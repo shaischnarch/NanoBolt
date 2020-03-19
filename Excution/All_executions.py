@@ -4,15 +4,28 @@ this layer uses the Calculations and inverse Calculations of layer 0 and execute
 physical movements of the legs
 '''
 
-from Excution.Servo_control import *
+from adafruit_servokit import ServoKit
+import busio
+import board
+
+global kit
+
+## main function for starting communication with the servos via i2c
+# returns servos which is a 16 long array representing all the servos
+# note that servos 0-2 are for leg 0, 4-6 are for leg 1, 8-10 are for leg 2, and 12-14 are for leg 3
+def servo_setup():
+    global kit
+    i2c_bus0 = (busio.I2C(board.SCL_1, board.SDA_1))
+    kit = ServoKit(channels=16, i2c=i2c_bus0)
+    print('servokit started')
 
 
-kit = servo_setup()
 
 
 ### main movement execution function
 # receives which leg to move one substep and the angles for set substep and executes the movement
 def execute_movement(leg_num, angles):
+    global kit
     (theta1, theta2, theta3) = angles
     offset = leg_num*4
     kit.servo[offset].angle = theta1

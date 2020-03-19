@@ -1,9 +1,10 @@
 from time import sleep
+from Main_directory import Settings
 
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
 
-granularity = 5
+granularity = Settings.granularity
 
 ## controller_call():
 # main function communicating with the ps4 controller
@@ -13,27 +14,19 @@ granularity = 5
 # is_connected: 0 = false    1 = true
 # analog sticks values are multiplied and rounded for easy use
 # sends granularity temporary
-def controller_call():
+def controller_call(ds4):
     global granularity
-    sleep(0.5)  # temp
-    try:
-        with ControllerResource(ControllerRequirement(require_class=DualShock4)) as ds4:
-            while ds4.connected:
-                is_connected = 1
-                left_x, left_y, right_x, right_y = ds4['lx', 'ly', 'rx', 'ry']
-                buttons_pressed = ds4.check_presses()
-                left_x = round(left_x*granularity)
-                left_y = round(left_y*granularity)
-                right_x = round(right_x * granularity)
-                right_y = round(right_y * granularity)
-                # print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y))
-                # print(buttons_pressed)
-                return (is_connected, left_x, left_y, right_x, right_y, buttons_pressed, granularity)
 
-    except IOError:
-        is_connected = 0
-        # No DS4 controller found, wait for a bit and try again
-        return (is_connected, 0, 0, 0, 0, [], granularity)
+    left_x, left_y, right_x, right_y = ds4['lx', 'ly', 'rx', 'ry']
+    buttons_pressed = ds4.check_presses()
+    left_x = round(left_x*granularity)
+    left_y = round(left_y*granularity)
+    right_x = round(right_x * granularity)
+    right_y = round(right_y * granularity)
+    # print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y))
+    # print(buttons_pressed)
+    return (is_connected, left_x, left_y, right_x, right_y, buttons_pressed, granularity)
+
 
 """ OLD TEST
 #####TEMP####
