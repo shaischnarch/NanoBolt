@@ -36,8 +36,8 @@ def controller_call():
         return (is_connected, 0, 0, 0, 0, [])
 """
 #####TEMP####
-while true:
-    sleep(0.5)  # temp
+while True:
+    
     try:
         with ControllerResource(ControllerRequirement(require_class=DualShock4)) as ds4:
             while ds4.connected:
@@ -48,9 +48,12 @@ while true:
                 left_y = round(left_y*granularity)
                 right_x = round(right_x * granularity)
                 right_y = round(right_y * granularity)
-                print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y) + '\tbutton_pressed = ' + buttons_pressed)
+                print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y))
+                print(buttons_pressed)
+                sleep(0.5)  # temp
 
     except IOError:
         is_connected = 0
         # No DS4 controller found, wait for a bit and try again
         print('Waiting for a DS4 controller connection')
+        sleep(1)  # temp
