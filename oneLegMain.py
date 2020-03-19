@@ -3,7 +3,7 @@ from Excution.All_executions import *
 from Plan.oneLegPlan import *
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
-from Helper_directory.Main_helper import *
+from Main_directory.Main_helper import *
 import time
 
 
