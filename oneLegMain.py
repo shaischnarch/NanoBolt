@@ -24,8 +24,10 @@ while (1):
 
 	(end_point, num_of_substeps, height, substep_delay, is_changed, shut_down) = plan_movement(current_leg_location, is_finished_step)
 
+	### for now just tests pausing movement
 	if (shut_down == True):
-		break
+		sleep(substep_delay)
+		continue
 
 	if (is_changed == True):
 		print((current_leg_location,end_point, num_of_substeps, height, substep_delay, is_changed, shut_down))

@@ -12,7 +12,7 @@ granularity = 5
 # returns: (is_connected, left_x, left_y, right_x, right_y, buttons_pressed)
 # is_connected: 0 = false    1 = true
 # analog sticks values are multiplied and rounded for easy use
-"""
+# sends granularity temporary
 def controller_call():
     global granularity
     sleep(0.5)  # temp
@@ -26,15 +26,16 @@ def controller_call():
                 left_y = round(left_y*granularity)
                 right_x = round(right_x * granularity)
                 right_y = round(right_y * granularity)
-                print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y) + '\tbutton_pressed = ' + buttons_pressed)
-                return (is_connected, left_x, left_y, right_x, right_y, buttons_pressed)
+                # print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y))
+                # print(buttons_pressed)
+                return (is_connected, left_x, left_y, right_x, right_y, buttons_pressed, granularity)
 
     except IOError:
         is_connected = 0
         # No DS4 controller found, wait for a bit and try again
-        print('Waiting for a DS4 controller connection')
-        return (is_connected, 0, 0, 0, 0, [])
-"""
+        return (is_connected, 0, 0, 0, 0, [], granularity)
+
+""" OLD TEST
 #####TEMP####
 while True:
     
@@ -57,3 +58,4 @@ while True:
         # No DS4 controller found, wait for a bit and try again
         print('Waiting for a DS4 controller connection')
         sleep(1)  # temp
+"""
