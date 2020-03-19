@@ -1,5 +1,5 @@
 from time import sleep
-from Main_directory import Settings
+from Helper_directory import Settings
 
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement

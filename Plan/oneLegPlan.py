@@ -1,5 +1,5 @@
 from Plan.Controller import *
-from Main_directory import Settings
+from Helper_directory import Settings
 from time import sleep
 
 # (end_point, num_of_substeps, height, substep_delay, is_changed, shut_down) = oneLegPlan(current_leg_location, is_finished_step)

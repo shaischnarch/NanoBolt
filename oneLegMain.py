@@ -3,7 +3,7 @@ from Excution.All_executions import *
 from Plan.oneLegPlan import *
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
-from Main_directory.Main_helper import *
+from Helper_directory.Main_helper import *
 import time
 
 
@@ -106,4 +106,4 @@ while (1):
 	time.sleep(substep_delay)
 
     ######### this is out of the while(1). Shutdown everything ########################
-""""
+"""
