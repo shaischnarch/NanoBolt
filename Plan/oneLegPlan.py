@@ -13,7 +13,7 @@ height = 0
 substep_delay = 0
 is_changed = 0
 shut_down = 0
-type = 'up'
+move_type = 'down'
 prev_left_y = 0
 
 
@@ -129,6 +129,7 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     global substep_delay
     global is_changed
     global shut_down
+    global move_type
 
     end_point = current_leg_location
 
@@ -144,12 +145,12 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
     if (is_finished_step == True):
 
-        if (type == 'up'):
-            type = 'down'
+        if (move_type == 'down'):
+            move_type = 'up'
             end_point = (-25, -150, 75)
             height = 35
-        elif (type == 'down'):
-            type = 'up'
+        elif (move_type == 'up'):
+            move_type = 'down'
             end_point = (-25, -150, -75)
             height = 0
         is_changed = 1
