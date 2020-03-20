@@ -15,6 +15,8 @@ is_changed = 0
 shut_down = 0
 move_type = 'down'
 prev_left_y = 0
+prev_norm_y = 0
+prev_norm_x = 0
 
 
 """
@@ -131,27 +133,25 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     global shut_down
     global move_type
     global prev_left_y
+    global prev_norm_y
+    global prev_norm_x
 
     end_point = current_leg_location
 
     (left_x, left_y, right_x, right_y, buttons_pressed) = controller_call(ds4)
 
-    if (left_y == 0):
+    if (left_y == 0 and left_x == 0):
         shut_down = 1
     else:
         shut_down = 0
         substep_delay = max_delay - ((max_delay-min_delay) / granularity)*abs(left_y)
+        norm_y = left_y / sqrt(left_x*left_x + left_y*left_y)
+        norm_x = left_x / sqrt(left_x*left_x + left_y*left_y)
 
 
     ## if (prev_left_y*left_y < 0) means we are changing direction
-    if (is_finished_step == True or (prev_left_y*left_y < 0)):
-        """
-        if (prev_left_y*left_y < 0): 
-            if (move_type=='down'):
-                move_type = 'up'
-            else:
-                move_type = 'down'
-        """
+    if (is_finished_step == True or (prev_norm_y != norm_y)):
+
         if (move_type == 'down'):
             move_type = 'up'
             end_point = (-25, -150, 75)
@@ -167,6 +167,11 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
         is_changed = 0
     if(left_y != 0):
         prev_left_y = left_y
+    if (left_y != 0 and left_x != 0):
+            prev_norm_y = norm_y
+            prev_norm_x = norm_x
+
+
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
 
 
