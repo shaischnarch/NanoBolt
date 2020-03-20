@@ -24,4 +24,4 @@ max_Z = 90
 min_Y = -25
 
 ## max absolute value of leg Y value
-max_Y = 90
+max_Y = -160

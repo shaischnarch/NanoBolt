@@ -10,12 +10,11 @@ import time
 
 ## initialization
 servo_setup()  # starts i2c communication with servos
-zero_position()
+current_leg_location = zero_position()
 sleep(1)
 
 points = []
 is_finished_step = True
-current_leg_location = (-25,-150,75)
 all_angles = []
 current_substep_num = 0
 last_substep_num = 0

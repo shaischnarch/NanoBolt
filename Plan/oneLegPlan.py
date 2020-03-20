@@ -13,6 +13,8 @@ height = 0
 substep_delay = 0
 is_changed = 0
 shut_down = 0
+type = 'up'
+prev_left_y = 0
 
 
 """
@@ -74,7 +76,7 @@ def plan_movement(current_leg_location, is_finished_step):
         is_changed = 0
 
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
-"""
+
 
 ##### V 1.1
 ## for now a speed change is sent back to the main via a change of substep_delay
@@ -114,7 +116,49 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
         is_changed = 0
 
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
+"""
 
+
+##### V 1.2
+## for now a speed change is sent back to the main via a change of substep_delay
+def plan_movement(current_leg_location, is_finished_step, ds4):
+    global max_delay
+    global min_delay
+    global num_of_substeps
+    global height
+    global substep_delay
+    global is_changed
+    global shut_down
+
+    end_point = current_leg_location
+
+    (left_x, left_y, right_x, right_y, buttons_pressed) = controller_call(ds4)
+
+    if (left_y == 0):
+        shut_down = 1
+    else:
+        shut_down = 0
+        substep_delay = max_delay - ((max_delay-min_delay) / granularity)*abs(left_y)
+
+
+
+    if (is_finished_step == True):
+
+        if (type == 'up'):
+            type = 'down'
+            end_point = (-25, -150, 75)
+            height = 35
+        elif (type == 'down'):
+            type = 'up'
+            end_point = (-25, -150, -75)
+            height = 0
+        is_changed = 1
+
+
+    else:
+        is_changed = 0
+
+    return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
 
 
 
