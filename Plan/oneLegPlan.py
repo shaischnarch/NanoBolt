@@ -130,6 +130,7 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     global is_changed
     global shut_down
     global move_type
+    global prev_left_y
 
     end_point = current_leg_location
 
@@ -142,23 +143,25 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
         substep_delay = max_delay - ((max_delay-min_delay) / granularity)*abs(left_y)
 
 
+    ## if (prev_left_y*left_y < 0) means we are changing direction
+    if (is_finished_step == True or (prev_left_y*left_y < 0)):
 
-    if (is_finished_step == True):
 
         if (move_type == 'down'):
             move_type = 'up'
             end_point = (-25, -150, 75)
-            height = 35
+            height = 35*int(left_y > 0)
         elif (move_type == 'up'):
             move_type = 'down'
             end_point = (-25, -150, -75)
-            height = 0
+            height = 35*int(left_y < 0)
         is_changed = 1
 
 
     else:
         is_changed = 0
 
+    prev_left_y = left_y
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
 
 
