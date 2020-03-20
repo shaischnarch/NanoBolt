@@ -3,7 +3,7 @@ from Excution.All_executions import *
 from Plan.oneLegPlan import *
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
-from Main_directory.Main_helper import *
+from Helper_directory.Main_helper import *
 import time
 
 
@@ -15,7 +15,7 @@ sleep(1)
 
 points = []
 is_finished_step = True
-current_leg_location = (-25,-150,60)
+current_leg_location = (-25,-150,75)
 all_angles = []
 current_substep_num = 0
 last_substep_num = 0
@@ -30,7 +30,7 @@ while True:
 				print('Controller Connected')
 
 				# main loop
-				while (1):
+				while (ds4.connected):
 
 					(end_point, num_of_substeps, height, substep_delay, is_changed, shut_down) = plan_movement(current_leg_location, is_finished_step, ds4)
 
@@ -64,8 +64,8 @@ while True:
 
 	except IOError:
 		## set the robot to the starting zero position
-		zero_positon()
-
+		zero_position()
+		current_leg_location = (-25,-150,75)
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')
 		sleep(1)  # temp

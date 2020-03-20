@@ -25,7 +25,7 @@ def controller_call(ds4):
     right_y = round(right_y * granularity)
     # print('left_x = ' + str(left_x) + '\tleft_y = ' + str(left_y) + '\tright_x = ' + str(right_x) + '\tright_y = ' + str(right_y))
     # print(buttons_pressed)
-    return (is_connected, left_x, left_y, right_x, right_y, buttons_pressed, granularity)
+    return (left_x, left_y, right_x, right_y, buttons_pressed)
 
 
 """ OLD TEST

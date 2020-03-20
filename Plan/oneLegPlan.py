@@ -89,7 +89,7 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
     end_point = current_leg_location
 
-    (is_connected, left_x, left_y, right_x, right_y, buttons_pressed) = controller_call(ds4)
+    (left_x, left_y, right_x, right_y, buttons_pressed) = controller_call(ds4)
 
     if (left_y <= 0):
         shut_down = 1
@@ -101,11 +101,11 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
     if (is_finished_step == True):
 
-        if (current_leg_location[2] == -60):
-            end_point = (-25, -150, 60)
+        if (current_leg_location[2] == -75):
+            end_point = (-25, -150, 75)
             height = 35
-        elif (current_leg_location[2] == 60):
-            end_point = (-25, -150, -60)
+        elif (current_leg_location[2] == 75):
+            end_point = (-25, -150, -75)
             height = 0
         is_changed = 1
 

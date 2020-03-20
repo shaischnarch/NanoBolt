@@ -9,7 +9,7 @@ max_delay = 0.05
 
 
 ## min substep delay
-min_delay = 0.01
+min_delay = 0.0075
 
 
 
