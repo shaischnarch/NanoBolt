@@ -145,8 +145,13 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
     ## if (prev_left_y*left_y < 0) means we are changing direction
     if (is_finished_step == True or (prev_left_y*left_y < 0)):
-
-
+        """
+        if (prev_left_y*left_y < 0): 
+            if (move_type=='down'):
+                move_type = 'up'
+            else:
+                move_type = 'down'
+        """
         if (move_type == 'down'):
             move_type = 'up'
             end_point = (-25, -150, 75)
@@ -160,8 +165,8 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
     else:
         is_changed = 0
-
-    prev_left_y = left_y
+    if(left_y != 0):
+        prev_left_y = left_y
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down
 
 

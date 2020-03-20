@@ -32,7 +32,6 @@ while True:
 				while (ds4.connected):
 
 					(end_point, num_of_substeps, height, substep_delay, is_changed, shut_down) = plan_movement(current_leg_location, is_finished_step, ds4)
-
 					### for now just tests pausing movement
 					if (shut_down == True):
 						sleep(substep_delay)
