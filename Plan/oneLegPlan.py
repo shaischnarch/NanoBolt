@@ -1,6 +1,7 @@
 from Plan.Controller import *
 from Helper_directory import Settings
 from time import sleep
+import math
 
 # (end_point, num_of_substeps, height, substep_delay, is_changed, shut_down) = oneLegPlan(current_leg_location, is_finished_step)
 
@@ -140,20 +141,22 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
     (left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
-    if (left_y == 0 and left_x == 0):
+    if (left_cy == 0 and left_cx == 0):
         shut_down = 1
+        norm_cx = 1
+        norm_cy = 1
     else:
         shut_down = 0
-        substep_delay = max_delay - ((max_delay-min_delay) / granularity)*abs(left_y)
-        norm_cy = left_cy / sqrt(left_cx*left_cx + left_cy*left_cy)
-        norm_cx = left_cx / sqrt(left_cx*left_cx + left_cy*left_cy)
+        substep_delay = max_delay - ((max_delay-min_delay) / granularity)*abs(left_cy)
+        norm_cy = left_cy / math.sqrt(left_cx*left_cx + left_cy*left_cy)
+        norm_cx = left_cx / math.sqrt(left_cx*left_cx + left_cy*left_cy)
 
 
     ## if (prev_left_y*left_y < 0) means we are changing direction
     if (is_finished_step == True):
 
-        end_z = dist_Z * abs(norm_cy)
-        end_x = -25 + dist_X * norm_cx
+        end_z = Settings.dist_Z * abs(norm_cy)
+        end_x = -25 + Settings.dist_X * norm_cx
 
         if (move_type == 'down'):
             move_type = 'up'
@@ -161,20 +164,20 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
 
             # (real X, real Y, real Z)
             end_point = (end_x, -150, end_z)
-            height = 35*int(left_y > 0)
+            height = 35*int(left_cy > 0)
 
         elif (move_type == 'up'):
             move_type = 'down'
-            end_point = (end_x, -150, -end_z)
-            height = 35*int(left_y < 0)
+            end_point = (-end_x, -150, -end_z)
+            height = 35*int(left_cy < 0)
         is_changed = 1
 
 
     else:
         is_changed = 0
-    if(left_y != 0):
+    if(left_cy != 0):
         prev_left_cy = left_cy
-    if (left_y != 0 and left_x != 0):
+    if (left_cy != 0 and left_cx != 0):
             prev_norm_cy = norm_cy
             prev_norm_cx = norm_cx
 
