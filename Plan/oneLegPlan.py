@@ -156,19 +156,19 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     if (is_finished_step == True):
 
         end_z = Settings.dist_Z * abs(norm_cy)
-        end_x = -25 + Settings.dist_X * norm_cx
+        end_x = Settings.dist_X * norm_cx
 
         if (move_type == 'down'):
             move_type = 'up'
 
 
             # (real X, real Y, real Z)
-            end_point = (end_x, -150, end_z)
+            end_point = (-25 + end_x, -150, end_z)
             height = 35*int(left_cy > 0)
 
         elif (move_type == 'up'):
             move_type = 'down'
-            end_point = (-end_x, -150, -end_z)
+            end_point = (-25 - end_x, -150, -end_z)
             height = 35*int(left_cy < 0)
         is_changed = 1
 
