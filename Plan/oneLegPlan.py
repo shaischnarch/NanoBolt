@@ -14,9 +14,9 @@ substep_delay = 0
 is_changed = 0
 shut_down = 0
 move_type = 'down'
-prev_left_y = 0
-prev_norm_y = 0
-prev_norm_x = 0
+prev_left_cy = 0
+prev_norm_cy = 0
+prev_norm_cx = 0
 
 
 """
@@ -132,33 +132,40 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     global is_changed
     global shut_down
     global move_type
-    global prev_left_y
-    global prev_norm_y
-    global prev_norm_x
+    global prev_left_cy
+    global prev_norm_cy
+    global prev_norm_cx
 
     end_point = current_leg_location
 
-    (left_x, left_y, right_x, right_y, buttons_pressed) = controller_call(ds4)
+    (left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
     if (left_y == 0 and left_x == 0):
         shut_down = 1
     else:
         shut_down = 0
         substep_delay = max_delay - ((max_delay-min_delay) / granularity)*abs(left_y)
-        norm_y = left_y / sqrt(left_x*left_x + left_y*left_y)
-        norm_x = left_x / sqrt(left_x*left_x + left_y*left_y)
+        norm_cy = left_cy / sqrt(left_cx*left_cx + left_cy*left_cy)
+        norm_cx = left_cx / sqrt(left_cx*left_cx + left_cy*left_cy)
 
 
     ## if (prev_left_y*left_y < 0) means we are changing direction
-    if (is_finished_step == True or (prev_norm_y != norm_y)):
+    if (is_finished_step == True):
+
+        end_z = dist_Z * abs(norm_cy)
+        end_x = -25 + dist_X * norm_cx
 
         if (move_type == 'down'):
             move_type = 'up'
-            end_point = (-25, -150, 75)
+
+
+            # (real X, real Y, real Z)
+            end_point = (end_x, -150, end_z)
             height = 35*int(left_y > 0)
+
         elif (move_type == 'up'):
             move_type = 'down'
-            end_point = (-25, -150, -75)
+            end_point = (end_x, -150, -end_z)
             height = 35*int(left_y < 0)
         is_changed = 1
 
@@ -166,10 +173,10 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     else:
         is_changed = 0
     if(left_y != 0):
-        prev_left_y = left_y
+        prev_left_cy = left_cy
     if (left_y != 0 and left_x != 0):
-            prev_norm_y = norm_y
-            prev_norm_x = norm_x
+            prev_norm_cy = norm_cy
+            prev_norm_cx = norm_cx
 
 
     return end_point,num_of_substeps,height,substep_delay,is_changed,shut_down

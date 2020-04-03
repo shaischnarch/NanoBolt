@@ -14,6 +14,12 @@ min_delay = 0.0075
 
 
 
+## step parameters:
+dist_X = 75
+dist_Z = 75
+
+
+
 
 ## max absolute value of leg X value
 max_X = 90
