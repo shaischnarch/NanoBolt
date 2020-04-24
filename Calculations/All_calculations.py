@@ -105,9 +105,9 @@ def servo_angles(angles_rad, leg_num):
             temp_2 = 180 - (temp_2 + 90)
             temp_3 = 180 - temp_3
         else:
-            temp_1 = (180 - (temp_1 + 90))*-1
-            temp_2 = (180 - (temp_2 + 90))*-1
-            temp_3 = (180 - temp_3)*-1
+            temp_1 = (temp_1 + 90)
+            temp_2 = (temp_2 + 90)
+            temp_3 = temp_3
         ##see paper for the conversion explanation
         angles_servo.append((temp_1, temp_2, temp_3))
     return angles_servo

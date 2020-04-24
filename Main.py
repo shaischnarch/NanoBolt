@@ -1,6 +1,6 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
-from Plan.oneLegPlan import *
+from Plan.All_Plans import *
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
 from Helper_directory.Main_helper import *
@@ -46,7 +46,8 @@ while True:
 						# calculate_movement(start_p, end_p, height, num_of_substeps):
 						# all_angles should be in servo-angles
 						for leg_num in range(4):
-							print((leg_num, current_leg_locations[leg_num], end_points[leg_num], num_of_substeps, heights[leg_num], substep_delay, is_changed, shut_down))
+							print((leg_num, current_leg_locations[leg_num], end_points[leg_num], num_of_substeps, substep_delay, is_changed, shut_down))
+							print(heights[leg_num])
 							angles_rad[leg_num] = calculate_movement(current_leg_locations[leg_num], end_points[leg_num], heights[leg_num], num_of_substeps) #### make sure that calculate movement is designed for both left and right
 							all_angles[leg_num] = servo_angles(angles_rad[leg_num], leg_num)
 							points[leg_num] = calculate_points(current_leg_locations[leg_num], end_points[leg_num], heights[leg_num], num_of_substeps) ###same as calculate movement

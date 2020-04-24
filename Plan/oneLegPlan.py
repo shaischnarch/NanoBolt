@@ -145,9 +145,12 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
         shut_down = 1
         norm_cx = 1
         norm_cy = 1
+        radius = 1
     else:
         shut_down = 0
         radius = math.sqrt(left_cx*left_cx + left_cy*left_cy)
+        if (radius > granularity):
+            radius = granularity
         substep_delay = max_delay - ((max_delay-min_delay) / granularity)*radius
         norm_cy = left_cy / radius
         norm_cx = left_cx / radius
@@ -157,19 +160,20 @@ def plan_movement(current_leg_location, is_finished_step, ds4):
     if (is_finished_step == True):
 
         end_z = Settings.dist_Z * abs(norm_cy)
-        end_x = (-25 + Settings.dist_X) * norm_cx
+        end_x = Settings.dist_X * norm_cx
+        print(end_x,end_z, radius)
 
         if (move_type == 'down'):
             move_type = 'up'
 
 
             # (real X, real Y, real Z)
-            end_point = (end_x, -150, end_z)
+            end_point = (-15 + end_x, -150, end_z)
             height = 35*int(left_cy > 0)
 
         elif (move_type == 'up'):
             move_type = 'down'
-            end_point = (-end_x, -150, -end_z)
+            end_point = (-15 - end_x, -150, -end_z)
             height = 35*int(left_cy < 0)
         is_changed = 1
 

@@ -71,7 +71,6 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
 
         is_changed = 1
 
-
     else:
         is_changed = 0
 
