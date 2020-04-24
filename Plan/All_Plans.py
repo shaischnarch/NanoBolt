@@ -14,7 +14,8 @@ heights = [0, 0, 0, 0]
 substep_delay = 0
 is_changed = 0
 shut_down = 0
-move_types = ['down', 'up', 'down', 'up']
+move_types = [10, 20, 10, 20] # two digits, first representing 1 - forward ,2 - backwards, 0 - not moving forwards or backwards
+# second representing 1 - left, 2 - right, 0 - not moving left or right
 #prev_left_cy = 0
 #prev_norm_cy = 0
 #prev_norm_cx = 0
@@ -58,6 +59,7 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
         end_x = (-25 + Settings.dist_X) * norm_cx
 
         for leg_num in range(4):
+            """
             if (move_types[leg_num] == 'down'):
                 move_types[leg_num] = 'up'
                 # (real X, real Y, real Z)
@@ -69,6 +71,17 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                 end_points[leg_num] = (-end_x, -150, -end_z)
                 heights[leg_num] = 35*int(left_cy < 0)
             print((leg_num, current_leg_locations[leg_num], end_points[leg_num]))
+            """
+            if (move_types[leg_num] == 10)
+                move_types[leg_num] = 20
+                end_points[leg_num] = (-25, -150, end_z)
+                heights[leg_num] = 35 * int(left_cy > 0)
+
+            elif (move_types[leg_num] == 20):
+                move_types[leg_num] = 10
+                end_points[leg_num] = (-25, -150, -end_z)
+                heights[leg_num] = 35*int(left_cy < 0)
+
         is_changed = 1
 
     else:
