@@ -34,7 +34,7 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
 #    global prev_norm_cy
 #    global prev_norm_cx
 
-    end_points = current_leg_locations      ### end points needs a return value if is_finished_step == false, therefor this is just a temporary placeholder that isn't used
+    end_points = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]      ### end points needs a return value if is_finished_step == false, therefor this is just a temporary placeholder that isn't used
 
     (left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
@@ -68,7 +68,7 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                 move_types[leg_num] = 'down'
                 end_points[leg_num] = (-end_x, -150, -end_z)
                 heights[leg_num] = 35*int(left_cy < 0)
-
+            print((leg_num, current_leg_locations[leg_num], end_points[leg_num]))
         is_changed = 1
 
     else:
