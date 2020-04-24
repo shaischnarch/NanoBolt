@@ -72,7 +72,7 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                 heights[leg_num] = 35*int(left_cy < 0)
             print((leg_num, current_leg_locations[leg_num], end_points[leg_num]))
             """
-            if (move_types[leg_num] == 10)
+            if (move_types[leg_num] == 10):
                 move_types[leg_num] = 20
                 end_points[leg_num] = (-25, -150, end_z)
                 heights[leg_num] = 35 * int(left_cy > 0)
