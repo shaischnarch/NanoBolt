@@ -95,7 +95,15 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                     heights[leg_num] = 35 * int(left_cx < 0)
 
             else:
-                pass
+                if (move_types[leg_num] == 1):  ## walk forwards and backward
+                    move_types[leg_num] = 2
+                    end_points[leg_num] = (end_x, -150, end_z)
+                    heights[leg_num] = 35 * int(left_cy >= 0)
+
+                elif (move_types[leg_num] == 2):  ## walk forwards and backward
+                    move_types[leg_num] = 1
+                    end_points[leg_num] = (-end_x, -150, -end_z)
+                    heights[leg_num] = 35 * int(left_cy < 0)
 
         is_changed = 1
 
