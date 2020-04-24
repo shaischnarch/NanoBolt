@@ -14,7 +14,7 @@ heights = [0, 0, 0, 0]
 substep_delay = 0
 is_changed = 0
 shut_down = 0
-move_types = [10, 20, 10, 20] # two digits, first representing 1 - forward ,2 - backwards, 0 - not moving forwards or backwards
+move_types = [1, 2, 1, 2] # two digits, first representing 1 - forward ,2 - backwards, 0 - not moving forwards or backwards
 # second representing 1 - left, 2 - right, 0 - not moving left or right
 #prev_left_cy = 0
 #prev_norm_cy = 0
