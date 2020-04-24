@@ -72,6 +72,11 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                 heights[leg_num] = 35*int(left_cy < 0)
             print((leg_num, current_leg_locations[leg_num], end_points[leg_num]))
             """
+            if (leg_num == 0 or leg_num == 3):
+                temp_end_x = end_x
+            else:
+                temp_end_x = -end_x
+
             if (norm_cx == 0):
                 if (move_types[leg_num] == 1): ## walk forwards and backward
                     move_types[leg_num] = 2
@@ -86,12 +91,12 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
             elif (norm_cy == 0):
                 if (move_types[leg_num] == 1): ## walk left and right
                     move_types[leg_num] = 2
-                    end_points[leg_num] = (end_x, -150, 0)
+                    end_points[leg_num] = (temp_end_x, -150, 0)
                     heights[leg_num] = 35 * int(left_cx > 0)
 
                 elif (move_types[leg_num] == 2): ## walk left and right
                     move_types[leg_num] = 1
-                    end_points[leg_num] = (-end_x, -150, 0)
+                    end_points[leg_num] = (-temp_end_x, -150, 0)
                     heights[leg_num] = 35 * int(left_cx < 0)
 
             else:
