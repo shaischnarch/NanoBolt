@@ -45,10 +45,12 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
         norm_cy = 1
     else:
         shut_down = 0
-        radius = math.sqrt(left_cx*left_cx + left_cy*left_cy)       ##### fix from jetson code!!!
-        substep_delay = max_delay - ((max_delay-min_delay) / granularity)*radius
+        radius = math.sqrt(left_cx*left_cx + left_cy*left_cy)
+        substep_delay = max_delay - ((max_delay - min_delay) / granularity) * radius
         norm_cy = left_cy / radius
         norm_cx = left_cx / radius
+        if (radius > granularity):  ### fix for controller joystick being too big
+            substep_delay = max_delay - ((max_delay-min_delay) / granularity)*granularity
 
 
     ## if (prev_left_y*left_y < 0) means we are changing direction
