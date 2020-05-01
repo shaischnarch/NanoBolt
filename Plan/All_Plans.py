@@ -101,6 +101,9 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
 
             else:
                 if (norm_cy > 0):
+                    if (norm_cx < 0): #add  forward left support
+                        temp_end_x = -temp_end_x
+
                     if (move_types[leg_num] == 1):  ## walk forwards and across
                         move_types[leg_num] = 2
                         end_points[leg_num] = (temp_end_x, -150, end_z)
@@ -112,6 +115,9 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                         heights[leg_num] = 35 * int(left_cy < 0)
 
                 else:
+                    if (norm_cx > 0): #add backwards right support
+                        temp_end_x = -temp_end_x
+
                     if (move_types[leg_num] == 1):  ## walk backward and across
                         move_types[leg_num] = 2
                         end_points[leg_num] = (temp_end_x, -150, end_z)
