@@ -4,12 +4,16 @@ from Plan.All_Plans import *
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
 from Helper_directory.Main_helper import *
+import digitalio
 import time
+
+# Led Pin Definitions
+led = digitalio.DigitalInOut(board.D18)
+led.direction = digitalio.Direction.OUTPUT
 
 ## initialization
 servo_setup()  # starts i2c communication with servos
-current_leg_locations = zero_position()
-sleep(1)  # gives enough time to get to zero position
+
 
 
 
@@ -22,12 +26,19 @@ last_substep_num = 0
 ####last_substep_num = [0, 0, 0, 0]
 
 
+current_leg_locations = zero_position()
+sleep(1)  # gives enough time to get to zero position
+
 ## here starts communication with ps4 controller
 while True:
-
+	led.value = True
+	time.sleep(0.5)
+	led.value = False
 	try:
 		with ControllerResource(ControllerRequirement(require_class=DualShock4)) as ds4:
 			while ds4.connected:
+				#turn led on
+				led.value = True
 				print('Controller Connected')
 				# main loop
 				while (ds4.connected):
@@ -73,5 +84,5 @@ while True:
 		current_leg_locations = zero_position()
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')
-		sleep(1)  # temp
+		sleep(0.5)  # temp
 
