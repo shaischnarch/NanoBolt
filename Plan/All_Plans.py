@@ -130,6 +130,9 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                         end_points[leg_num] = (-temp_end_x, -150, -end_z)
                         heights[leg_num] = 35 * int(left_cy < 0)
 
+                if (leg_num == 2 or leg_num == 3):
+                    end_points[leg_num] = end_points[leg_num] - (0,20,0)
+
         is_changed = 1
 
     else:
