@@ -17,8 +17,7 @@ min_delay = 0.0075
 ## step parameters:
 dist_X = 30
 dist_Z = 30
-
-
+step_height = 15
 
 
 ## max absolute value of leg X value
