@@ -15,8 +15,8 @@ min_delay = 0.0075
 
 
 ## step parameters:
-dist_X = 50
-dist_Z = 40
+dist_X = 30
+dist_Z = 30
 
 
 
