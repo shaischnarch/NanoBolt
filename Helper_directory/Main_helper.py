@@ -6,7 +6,7 @@ def zero_position():
     execute_movement(0, (90, 135, 90))
     execute_movement(1, (90, 80, 60))
     execute_movement(2, (90, 45, 90))
-    execute_movement(3, (90, 120, 150))
+    execute_movement(3, (90, 120, 120))
     #execute_movement(0, (90, 90, 90))
     #execute_movement(1, (90, 90, 90))
     #execute_movement(2, (90, 90, 90))
