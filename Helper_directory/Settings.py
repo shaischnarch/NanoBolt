@@ -19,7 +19,7 @@ dist_X = 20
 dist_Z = 20
 base_height = -150 # the height of the robot above ground in its base position (standing position)
 step_height = 20
-legs_offset = [(0,0,0),(-5,-10,0),(-3,-20,-30),(15,-15,-35)] # the offset for each leg relative to regular step (legs 0,1,2,3)
+legs_offset = [(0,-3,0),(-5,-13,0),(-3,-20,-30),(15,-15,-35)] # the offset for each leg relative to regular step (legs 0,1,2,3)
 #legs_offset = [(0,0,0),(0,0,0),(0,-15,-35),(0,-15,-35)]
 
 ## max absolute value of leg X value
