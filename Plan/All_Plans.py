@@ -83,23 +83,23 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                 if (move_types[leg_num] == 1): ## walk forwards and backward
                     move_types[leg_num] = 2
                     end_points[leg_num] = (-25, Settings.base_height, end_z)
-                    heights[leg_num] = 35 * int(left_cy > 0)
+                    heights[leg_num] = Settings.step_height * int(left_cy > 0)
 
                 elif (move_types[leg_num] == 2): ## walk forwards and backward
                     move_types[leg_num] = 1
                     end_points[leg_num] = (-25, Settings.base_height, -end_z)
-                    heights[leg_num] = 35*int(left_cy < 0)
+                    heights[leg_num] = Settings.step_height*int(left_cy < 0)
 
             elif (norm_cy == 0):
                 if (move_types[leg_num] == 1): ## walk left and right
                     move_types[leg_num] = 2
                     end_points[leg_num] = (temp_end_x, Settings.base_height, 0)
-                    heights[leg_num] = 35 * int(left_cx > 0)
+                    heights[leg_num] = Settings.step_height * int(left_cx > 0)
 
                 elif (move_types[leg_num] == 2): ## walk left and right
                     move_types[leg_num] = 1
                     end_points[leg_num] = (-temp_end_x, Settings.base_height, 0)
-                    heights[leg_num] = 35 * int(left_cx < 0)
+                    heights[leg_num] = Settings.step_height * int(left_cx < 0)
 
             else:
                 if (norm_cy > 0):
@@ -109,12 +109,12 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                     if (move_types[leg_num] == 1):  ## walk forwards and across
                         move_types[leg_num] = 2
                         end_points[leg_num] = (temp_end_x, Settings.base_height, end_z)
-                        heights[leg_num] = 35 * int(left_cy >= 0)
+                        heights[leg_num] = Settings.step_height * int(left_cy >= 0)
 
                     elif (move_types[leg_num] == 2):  ## walk forwards and across
                         move_types[leg_num] = 1
                         end_points[leg_num] = (-temp_end_x, Settings.base_height, -end_z)
-                        heights[leg_num] = 35 * int(left_cy < 0)
+                        heights[leg_num] = Settings.step_height * int(left_cy < 0)
 
                 else:
                     if (norm_cx > 0): #add backwards right support
@@ -123,15 +123,17 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                     if (move_types[leg_num] == 1):  ## walk backward and across
                         move_types[leg_num] = 2
                         end_points[leg_num] = (temp_end_x, Settings.base_height, end_z)
-                        heights[leg_num] = 35 * int(left_cy >= 0)
+                        heights[leg_num] = Settings.step_height * int(left_cy >= 0)
 
                     elif (move_types[leg_num] == 2):  ## walk backward and across
                         move_types[leg_num] = 1
                         end_points[leg_num] = (-temp_end_x, Settings.base_height, -end_z)
-                        heights[leg_num] = 35 * int(left_cy < 0)
+                        heights[leg_num] = Settings.step_height * int(left_cy < 0)
 
                 if (leg_num == 2 or leg_num == 3):
-                    end_points[leg_num] = end_points[leg_num] - (0,20,0)
+                    lst = list(end_points[leg_num])
+                    lst[1] -= 20
+                    end_points[leg_num] = tuple(lst)
 
         is_changed = 1
 
