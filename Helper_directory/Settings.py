@@ -17,7 +17,7 @@ min_delay = 0.0075
 ## step parameters:
 dist_X = 20
 dist_Z = 20
-base_height = -170 # the height of the robot above ground in its base position (standing position)
+base_height = -160 # the height of the robot above ground in its base position (standing position)
 step_height = 20
 back_legs_offset = (0,-20,-35) # the offset of the back legs relative to regular step
 
