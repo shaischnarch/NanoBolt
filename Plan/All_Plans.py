@@ -132,7 +132,10 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
 
                 if (leg_num == 2 or leg_num == 3):
                     lst = list(end_points[leg_num])
-                    lst[1] -= 20
+                    offset = list(Settings.back_legs_offset)
+                    lst[0] += offset[0]
+                    lst[1] += offset[1]
+                    lst[2] += offset[2]
                     end_points[leg_num] = tuple(lst)
 
         is_changed = 1
