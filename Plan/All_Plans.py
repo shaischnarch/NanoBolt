@@ -58,8 +58,8 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
         # for now we are just walking
 
         end_z = Settings.dist_Z * abs(norm_cy)
-        end_x = (-25 + Settings.dist_X) * abs(norm_cx)
-
+        #end_x = (-25 + Settings.dist_X) * abs(norm_cx)
+        end_x = Settings.dist_X * abs(norm_cx)
         for leg_num in range(4):
             """
             if (move_types[leg_num] == 'down'):
