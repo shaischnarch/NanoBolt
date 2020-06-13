@@ -17,6 +17,7 @@ min_delay = 0.0075
 ## step parameters:
 dist_X = 30
 dist_Z = 30
+base_height = -170 # the height of the robot above ground in its base position (standing position)
 
 
 
@@ -31,4 +32,4 @@ max_Z = 90
 min_Y = -25
 
 ## max absolute value of leg Y value
-max_Y = -160
+max_Y = -220
