@@ -18,7 +18,12 @@ min_delay = 0.0075
 dist_X = 20
 dist_Z = 20
 base_height = -150 # the height of the robot above ground in its base position (standing position)
+
+## the calculation for  added  step height : step_height*height_normalization(x-x^2)^height_power
 step_height = 20
+height_power= 0.5
+height_normalization= 0.25**(-height_power)
+
 legs_offset = [(0,-3,0),(-5,-13,0),(-3,-20,-30),(15,-15,-35)] # the offset for each leg relative to regular step (legs 0,1,2,3)
 #legs_offset = [(0,0,0),(0,0,0),(0,-15,-35),(0,-15,-35)]
 

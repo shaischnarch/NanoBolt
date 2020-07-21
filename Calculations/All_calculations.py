@@ -3,6 +3,8 @@
 from mpl_toolkits import mplot3d
 import numpy as np
 from math import *
+from Helper_directory import Settings
+
 
 # robots size constants
 l1 = 25
@@ -48,7 +50,7 @@ def calculate_points(start_p, end_p, height, num_of_substeps):
     for i in range((num_of_substeps + 1)):
         di = i / num_of_substeps
         temp_x = x1 + (dx * i)
-        temp_y = y1 + (dy * i) + (-4 * height * di * di + 4 * height * di)
+        temp_y = y1 + (dy * i) + height*Settings.height_normalization(di-di**2)**Settings.height_power
         temp_z = z1 + (dz * i)
         points.append((temp_x, temp_y, temp_z))
     return points
