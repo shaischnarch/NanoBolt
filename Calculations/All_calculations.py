@@ -50,7 +50,7 @@ def calculate_points(start_p, end_p, height, num_of_substeps):
     for i in range((num_of_substeps + 1)):
         di = i / num_of_substeps
         temp_x = x1 + (dx * i)
-        temp_y = y1 + (dy * i) + height*Settings.height_normalization(di-di**2)**Settings.height_power
+        temp_y = y1 + (dy * i) + height*Settings.height_normalization*(di-di**2)**Settings.height_power
         temp_z = z1 + (dz * i)
         points.append((temp_x, temp_y, temp_z))
     return points
