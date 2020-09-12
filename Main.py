@@ -6,10 +6,18 @@ from approxeng.input.selectbinder import ControllerResource, ControllerRequireme
 from Helper_directory.Main_helper import *
 import digitalio
 import time
+import board
+import busio
+import adafruit_bno055
+
 
 # Led Pin Definitions
 led = digitalio.DigitalInOut(board.D18)
 led.direction = digitalio.Direction.OUTPUT
+
+# IMU SETUP AND Definitions
+i2c = busio.I2C(board.SCL, board.SDA)
+sensor = adafruit_bno055.BNO055_I2C(i2c)
 
 ## initialization
 servo_setup()  # starts i2c communication with servos
@@ -85,4 +93,6 @@ while True:
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')
 		sleep(0.5)  # temp
+		print("Euler angle: {}".format(sensor.euler))
+
 
