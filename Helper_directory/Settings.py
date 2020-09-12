@@ -24,7 +24,7 @@ step_height = 20
 height_power= 0.5
 height_normalization= 0.25**(-height_power)
 
-legs_offset = [(0,-3,0),(-5,-13,0),(-3,-20,-30),(15,-15,-35)] # the offset for each leg relative to regular step (legs 0,1,2,3)
+legs_offset = [(-10,-15,25),(0,18,-15),(0,-22,-25),(0,-20,-10)] # the offset for each leg relative to regular step (legs 0,1,2,3)
 #legs_offset = [(0,0,0),(0,0,0),(0,-15,-35),(0,-15,-35)]
 
 ## max absolute value of leg X value
