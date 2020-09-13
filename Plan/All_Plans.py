@@ -88,7 +88,7 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
                 elif (move_types[leg_num] == 2): ## walk forwards and backward
                     move_types[leg_num] = 1
                     end_points[leg_num] = (-25, Settings.base_height, -end_z)
-                    heights[leg_num] = Settings.step_height*int(left_cy < 0)
+                    heights[leg_num] = Settings.step_height * int(left_cy < 0)
 
             elif (norm_cy == 0):
                 if (move_types[leg_num] == 1): ## walk left and right

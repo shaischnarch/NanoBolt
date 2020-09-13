@@ -24,6 +24,7 @@ def servo_setup():
 
 ### main movement execution function
 # receives which leg to move one substep and the angles for set substep and executes the movement
+# this method works in angles*****
 def execute_movement(leg_num, angles):
     global kit
     (theta1, theta2, theta3) = angles

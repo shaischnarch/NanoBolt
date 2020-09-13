@@ -88,7 +88,6 @@ while True:
 
 	except IOError:
 		## set the robot to the starting zero position
-		zero_position()
 		current_leg_locations = zero_position()
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')

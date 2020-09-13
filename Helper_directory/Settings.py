@@ -15,8 +15,8 @@ min_delay = 0.0075
 
 
 ## step parameters:
-dist_X = 20
-dist_Z = 20
+dist_X = 20 # the max size of a single step in the X direction (millimeters)
+dist_Z = 20 # the max size of a single step in the Z direction (millimeters)
 base_height = -150 # the height of the robot above ground in its base position (standing position)
 
 ## the calculation for  added  step height : step_height*height_normalization(x-x^2)^height_power
