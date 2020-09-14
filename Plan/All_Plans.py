@@ -22,7 +22,7 @@ move_types = [1, 2, 1, 2] # two digits, first representing 1 - forward ,2 - back
 
 ##### V 1.3
 ## for now a speed change is sent back to the main via a change of substep_delay
-def plan_movement(current_leg_locations, is_finished_step, ds4):
+def plan_movement(current_leg_locations, is_finished_step, ds4, is_stand):
     global max_delay
     global min_delay
     global num_of_substeps
@@ -36,6 +36,7 @@ def plan_movement(current_leg_locations, is_finished_step, ds4):
 #    global prev_norm_cx
 
     end_points = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]      ### end points needs a return value if is_finished_step == false, therefor this is just a temporary placeholder that isn't used
+
 
     (left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
