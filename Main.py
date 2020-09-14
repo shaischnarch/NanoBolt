@@ -13,9 +13,30 @@ import adafruit_bno055
 
 
 ######### *temp* for stand mode ###### changed in shai
-def stand_pre_execution(sensor):
+sensor_act = 1 # the value under which the robot is considered flat
+def stand_pre_execution(sensor, sensor_offset):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
+	offsets = [0,0,0,0]
+	if (abs(euler2) > sensor_act):
+		offsets[0] += sign(euler2)
+		offsets[1] += sign(euler2)
+		offsets[2] -= sign(euler2)
+		offsets[3] -= sign(euler2)
+
+	if (abs(euler3) > sensor_act):
+		offsets[0] -= sign(euler3)
+		offsets[1] += sign(euler3)
+		offsets[2] += sign(euler3)
+		offsets[3] -= sign(euler3)
+
+	for j in range(4):
+		lst = list(sensor_offset[i])
+		lst[1] += offsets[1]
+		sensor_offset[i] = tuple(lst)
+
+
+###########################################################
 
 
 # Led Pin Definitions
@@ -56,7 +77,7 @@ while True:
 				#turn led on
 				led.value = True
 				print('Controller Connected')
-
+				sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
 				# main loop
 				while (ds4.connected):
 
@@ -65,13 +86,14 @@ while True:
 						default_x = Settings.default_x
 						default_y = Settings.default_y
 						default_z = Settings.default_z
-						sensor_offset = stand_pre_execution(sensor)
+						sensor_offset = stand_pre_execution(sensor, sensor_offset)
 						for i in range(4):
 							(offset1, offset2, offset3) = Settings.legs_offset[i]
 							(sensor_offset1, sensor_offset2, sensor_offset3) = sensor_offset[i]
 							(theta1, theta2, theta3) = legIK(default_x + offset1 + sensor_offset1, default_y + offset2 + sensor_offset2, default_z + offset3 + sensor_offset3)
 							angles_servo = servo_angles([(theta1, theta2, theta3)], i)
 							execute_movement(i, angles_servo[0])
+						sleep(Settings.min_delay)
 						continue
 					###### END OF STANDING MODE ########
 
