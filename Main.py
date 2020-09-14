@@ -19,22 +19,23 @@ def stand_pre_execution(sensor, sensor_offset):
 	print((euler1, euler2, euler3))
 	offsets = [0,0,0,0]
 	if (abs(euler2) > sensor_act):
-		offsets[0] += sign(euler2)
-		offsets[1] += sign(euler2)
-		offsets[2] -= sign(euler2)
-		offsets[3] -= sign(euler2)
+		offsets[0] -= np.sign(euler2)
+		offsets[1] -= np.sign(euler2)
+		offsets[2] += np.sign(euler2)
+		offsets[3] += np.sign(euler2)
 
 	if (abs(euler3) > sensor_act):
-		offsets[0] -= sign(euler3)
-		offsets[1] += sign(euler3)
-		offsets[2] += sign(euler3)
-		offsets[3] -= sign(euler3)
+		offsets[0] += np.sign(euler3)
+		offsets[1] -= np.sign(euler3)
+		offsets[2] -= np.sign(euler3)
+		offsets[3] += np.sign(euler3)
 
 	for j in range(4):
-		lst = list(sensor_offset[i])
-		lst[1] += offsets[1]
-		sensor_offset[i] = tuple(lst)
-
+		lst = list(sensor_offset[j])
+		lst[1] += offsets[j]
+		sensor_offset[j] = tuple(lst)
+	print(sensor_offset)
+	return sensor_offset
 
 ###########################################################
 
@@ -93,7 +94,7 @@ while True:
 							(theta1, theta2, theta3) = legIK(default_x + offset1 + sensor_offset1, default_y + offset2 + sensor_offset2, default_z + offset3 + sensor_offset3)
 							angles_servo = servo_angles([(theta1, theta2, theta3)], i)
 							execute_movement(i, angles_servo[0])
-						sleep(Settings.min_delay)
+						sleep(Settings.max_delay)
 						continue
 					###### END OF STANDING MODE ########
 
