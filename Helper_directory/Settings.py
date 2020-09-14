@@ -15,7 +15,7 @@ min_delay = 0.0075
 
 ## default values zero position
 default_x = -25
-default_y = -150
+default_y = -135
 default_z = 0
 
 ## step parameters:
