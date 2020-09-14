@@ -12,7 +12,7 @@ import busio
 import adafruit_bno055
 
 
-######### *temp* for stand mode ######
+######### *temp* for stand mode ###### changed in shai
 def stand_pre_execution(sensor):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
