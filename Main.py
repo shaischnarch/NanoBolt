@@ -16,44 +16,48 @@ import math
 ######### *temp* for stand mode ###### changed in shai
 sensor_act = 1 # the value under which the robot is considered flat
 def stand_pre_execution(sensor, sensor_offset):
+
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
 	offsets = [0,0,0,0]
-	lowest = 0
-	diff_width= -round(math.tan(math.pi*math.fabs(eular3)/180)*Settings.robot_width) ## math.tan gets rad, so we invert euler angle
-	diff_length = -round(math.tan(math.pi*math.fabs(eular2)/180)*Settings.robot_length) ## math.tan gets rad, so we invert euler angle
-	lowest_width_neighber= diff_width+lowest
-	lowest_length_neighber =  diff_length +lowest
-	highest = lowest+ diff_width+ diff_length
+	if euler2>sensor_act or euler3>sensor_act:
+		lowest = 0
+		diff_width = -round(math.tan(
+			math.pi * math.fabs(eular3) / 180) * Settings.robot_width)  ## math.tan gets rad, so we invert euler angle
+		diff_length = -round(math.tan(
+			math.pi * math.fabs(eular2) / 180) * Settings.robot_length)  ## math.tan gets rad, so we invert euler angle
+		lowest_width_neighber = diff_width + lowest
+		lowest_length_neighber = diff_length + lowest
+		highest = lowest + diff_width + diff_length
 
-	if (eular2>0 and eular3>0): ## leg 1 is the highest, leg 3 is the lowest
-		leg0= lowest_length_neighber
-		leg1= highest
-		leg2 = lowest_width_neighber
-		leg3 =  lowest
+		if (eular2 > 0 and eular3 > 0):  ## leg 1 is the highest, leg 3 is the lowest
+			leg0 = lowest_length_neighber
+			leg1 = highest
+			leg2 = lowest_width_neighber
+			leg3 = lowest
 
-	elif (eular2>0 and euler3<0): ## leg 0 is the highest, leg 2 is the lowest
-		leg0 = highest
-		leg1 = lowest_length_neighber
-		leg2 = lowest
-		leg3 = lowest_width_neighber
+		elif (eular2 > 0 and euler3 < 0):  ## leg 0 is the highest, leg 2 is the lowest
+			leg0 = highest
+			leg1 = lowest_length_neighber
+			leg2 = lowest
+			leg3 = lowest_width_neighber
 
-	elif (eular2<0 and euler3>0) :  ## leg 2 is the highest, leg 0 is the lowest
-		leg0 = lowest
-		leg1 = lowest_width_neighber
-		leg2 = highest
-		leg3 = lowest_length_neighber
+		elif (eular2 < 0 and euler3 > 0):  ## leg 2 is the highest, leg 0 is the lowest
+			leg0 = lowest
+			leg1 = lowest_width_neighber
+			leg2 = highest
+			leg3 = lowest_length_neighber
 
-	else:                          ## leg 3 is the highest, leg 1 is the lowest
-		leg0 = lowest_width_neighber
-		leg1 = lowest
-		leg2 = lowest_length_neighber
-		leg3 = highest
+		else:  ## leg 3 is the highest, leg 1 is the lowest
+			leg0 = lowest_width_neighber
+			leg1 = lowest
+			leg2 = lowest_length_neighber
+			leg3 = highest
 
-	offsets[0] = round((leg0 - leg2) / 2)
-	offsets[1] = round((leg1 - leg3) / 2)
-	offsets[2] = round((leg2 - leg0) / 2)
-	offsets[3] = round((leg3 - leg1) / 2)
+		offsets[0] = round((leg0 - leg2) / 2)
+		offsets[1] = round((leg1 - leg3) / 2)
+		offsets[2] = round((leg2 - leg0) / 2)
+		offsets[3] = round((leg3 - leg1) / 2)
 
 	for j in range(4):
 		lst = list(sensor_offset[j])
