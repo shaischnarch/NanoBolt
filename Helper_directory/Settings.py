@@ -42,3 +42,9 @@ min_Y = -25
 
 ## max absolute value of leg Y value
 max_Y = -170
+
+## robots sizes
+robot_length = 250
+robot_width = 110
+
+
