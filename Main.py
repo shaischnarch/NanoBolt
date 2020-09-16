@@ -17,23 +17,37 @@ sensor_act = 1 # the value under which the robot is considered flat
 def stand_pre_execution(sensor, sensor_offset):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
-	offsets = [0,0,0,0]
+	offsetsX= [0,0,0,0]
+	offsetsY = [0,0,0,0]
+	offsetsZ = [0, 0, 0, 0]
 
 	if (abs(euler2) > sensor_act):
-		offsets[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
-		offsets[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
-		offsets[2] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
-		offsets[3] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsetsY[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsetsY[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsetsY[2] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsetsY[3] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+
+		offsetsZ[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[2] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[3] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
 
 	if (abs(euler3) > sensor_act):
-		offsets[0] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
-		offsets[1] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
-		offsets[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
-		offsets[3] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsetsY[0] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsetsY[1] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsetsY[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsetsY[3] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+
+		offsetsX[0] += np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		offsetsX[1] -= np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		offsetsX[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		offsetsX[3] += np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
 
 	for j in range(4):
 		lst = list(sensor_offset[j])
-		lst[1] += offsets[j]
+		lst[0] += offsetsX[j]
+		lst[1] += offsetsY[j]
+		lst[2] += offsetsZ[j]
 		sensor_offset[j] = tuple(lst)
 	print(sensor_offset)
 	return sensor_offset
