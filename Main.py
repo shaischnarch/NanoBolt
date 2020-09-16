@@ -10,6 +10,7 @@ import time
 import board
 import busio
 import adafruit_bno055
+import math
 
 
 ######### *temp* for stand mode ###### changed in shai
