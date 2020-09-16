@@ -28,10 +28,10 @@ def stand_pre_execution(sensor, sensor_offset):
 		offsetsY[2] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
 		offsetsY[3] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
 
-		offsetsZ[0] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-		offsetsZ[1] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-		offsetsZ[2] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-		offsetsZ[3] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		#offsetsZ[0] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		#offsetsZ[1] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		#offsetsZ[2] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		#offsetsZ[3] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
 
 	if (abs(euler3) > sensor_act):
 		offsetsY[0] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
@@ -39,10 +39,10 @@ def stand_pre_execution(sensor, sensor_offset):
 		offsetsY[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
 		offsetsY[3] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
 
-		offsetsX[0] += np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
-		offsetsX[1] -= np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
-		offsetsX[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
-		offsetsX[3] += np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		#offsetsX[0] += np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		#offsetsX[1] -= np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		#offsetsX[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
+		#offsetsX[3] += np.sign(euler3) * (1 + int(math.fabs(euler3) / 5))
 
 	for j in range(4):
 		lst = list(sensor_offset[j])
@@ -56,7 +56,7 @@ def stand_pre_execution(sensor, sensor_offset):
 ###########################################################
 ######### *temp* for 2-leg mode ###### changed in shai
 sensor_act = 1 # the value under which the robot is considered flat
-ratio = 3
+ratio = 1
 def two_leg_pre_execution(sensor, sensor_offset, two_leg_lean):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
@@ -71,6 +71,12 @@ def two_leg_pre_execution(sensor, sensor_offset, two_leg_lean):
 
 			offsetsX[0] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
 			offsetsX[2] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+
+			offsetsZ[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+			offsetsZ[3] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+
+			offsetsX[1] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsX[3] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
 	else:
 		if (abs(euler2) > sensor_act and abs(euler3) > sensor_act):
 			offsetsZ[1] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
@@ -78,6 +84,12 @@ def two_leg_pre_execution(sensor, sensor_offset, two_leg_lean):
 
 			offsetsX[1] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
 			offsetsX[3] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+
+			offsetsZ[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+			offsetsZ[2] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+
+			offsetsX[0] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsX[2] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
 
 
 	for j in range(4):
@@ -119,8 +131,8 @@ is_stand = True
 is_2_leg = False
 two_leg_lean = True ## True means legs 0 and 2 are touching the ground, False means legs 1 and 3 are touching the ground
 two_leg_path = [[], [], [], []]
-two_leg_offset = 20
-two_leg_substeps = 20
+two_leg_offset = 40
+two_leg_substeps = 80
 two_leg_counter = 0
 
 
@@ -143,11 +155,13 @@ while True:
 				# main loop
 				while (ds4.connected):
 					(left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
+					print(type(buttons_pressed))
 					print(buttons_pressed)
 
 
 					################### TWO LEG SWITCH #########################
-					if(buttons_pressed != []):
+					if 'circle' in ds4.presses:
+						print("hello yall")
 						is_stand = False
 						is_2_leg = True
 						sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
