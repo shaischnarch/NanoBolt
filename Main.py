@@ -56,7 +56,8 @@ def stand_pre_execution(sensor, sensor_offset):
 ###########################################################
 ######### *temp* for 2-leg mode ###### changed in shai
 sensor_act = 1 # the value under which the robot is considered flat
-ratio = 1
+ratio = 1/3 # the ration between x and z, (z/x)
+air_multiplier = 3
 def two_leg_pre_execution(sensor, sensor_offset, two_leg_lean):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
@@ -66,30 +67,30 @@ def two_leg_pre_execution(sensor, sensor_offset, two_leg_lean):
 
 	if (two_leg_lean):
 		if (abs(euler2) > sensor_act and abs(euler3) > sensor_act):
-			offsetsZ[0] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-			offsetsZ[2] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+			offsetsZ[0] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsZ[2] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * ratio
 
-			offsetsX[0] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
-			offsetsX[2] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsX[0] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5))
+			offsetsX[2] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5))
 
-			offsetsZ[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-			offsetsZ[3] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+			offsetsZ[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier * ratio
+			offsetsZ[3] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier * ratio
 
-			offsetsX[1] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
-			offsetsX[3] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsX[1] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier
+			offsetsX[3] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier
 	else:
 		if (abs(euler2) > sensor_act and abs(euler3) > sensor_act):
-			offsetsZ[1] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-			offsetsZ[3] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+			offsetsZ[1] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsZ[3] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * ratio
 
-			offsetsX[1] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
-			offsetsX[3] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsX[1] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5))
+			offsetsX[3] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5))
 
-			offsetsZ[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-			offsetsZ[2] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+			offsetsZ[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier * ratio
+			offsetsZ[2] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier * ratio
 
-			offsetsX[0] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
-			offsetsX[2] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * ratio
+			offsetsX[0] -= np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier
+			offsetsX[2] += np.sign(euler3) * (1 + int(math.fabs(euler2) / 5)) * air_multiplier
 
 
 	for j in range(4):
@@ -212,7 +213,7 @@ while True:
 							if i > 2:
 								offset3 = offset3 - 10
 							(sensor_offset1, sensor_offset2, sensor_offset3) = sensor_offset[i]
-							(theta1, theta2, theta3) = legIK(x + offset1 + sensor_offset1, y + offset2 + sensor_offset2, z + offset3 + sensor_offset3)
+							(theta1, theta2, theta3) = legIK(x + int(offset1) + sensor_offset1, y + int(offset2) + sensor_offset2, z + int(offset3) + sensor_offset3)
 							angles_servo = servo_angles([(theta1, theta2, theta3)], i)
 							execute_movement(i, angles_servo[0])
 						sleep(Settings.max_delay)
