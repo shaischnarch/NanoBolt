@@ -20,7 +20,7 @@ def stand_pre_execution(sensor, sensor_offset):
 	print((euler1, euler2, euler3))
 	offsetsX= [0,0,0,0]
 	offsetsY = [0,0,0,0]
-	offsetsZ = [0, 0, 0, 0]
+	offsetsZ = [0,0,0,0]
 
 	if (abs(euler2) > sensor_act):
 		offsetsY[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
@@ -28,10 +28,10 @@ def stand_pre_execution(sensor, sensor_offset):
 		offsetsY[2] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
 		offsetsY[3] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
 
-		offsetsZ[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-		offsetsZ[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-		offsetsZ[2] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
-		offsetsZ[3] -= np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[0] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[1] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[2] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
+		offsetsZ[3] += np.sign(euler2) * (1 + int(math.fabs(euler2) / 5))
 
 	if (abs(euler3) > sensor_act):
 		offsetsY[0] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
