@@ -20,29 +20,29 @@ def stand_pre_execution(sensor, sensor_offset):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
 	offsets = [0,0,0,0]
-	if euler2>sensor_act or euler3>sensor_act:
+	if math.fabs(euler2)>sensor_act or math.fabs(euler3)>sensor_act:
 		lowest = 0
 		diff_width = -round(math.tan(
-			math.pi * math.fabs(eular3) / 180) * Settings.robot_width)  ## math.tan gets rad, so we invert euler angle
+			math.pi * math.fabs(euler3) / 180) * Settings.robot_width)  ## math.tan gets rad, so we invert euler angle
 		diff_length = -round(math.tan(
-			math.pi * math.fabs(eular2) / 180) * Settings.robot_length)  ## math.tan gets rad, so we invert euler angle
+			math.pi * math.fabs(euler2) / 180) * Settings.robot_length)  ## math.tan gets rad, so we invert euler angle
 		lowest_width_neighber = diff_width + lowest
 		lowest_length_neighber = diff_length + lowest
 		highest = lowest + diff_width + diff_length
 
-		if (eular2 > 0 and eular3 > 0):  ## leg 1 is the highest, leg 3 is the lowest
+		if (euler2 > 0 and euler3 > 0):  ## leg 1 is the highest, leg 3 is the lowest
 			leg0 = lowest_length_neighber
 			leg1 = highest
 			leg2 = lowest_width_neighber
 			leg3 = lowest
 
-		elif (eular2 > 0 and euler3 < 0):  ## leg 0 is the highest, leg 2 is the lowest
+		elif (euler2 > 0 and euler3 < 0):  ## leg 0 is the highest, leg 2 is the lowest
 			leg0 = highest
 			leg1 = lowest_length_neighber
 			leg2 = lowest
 			leg3 = lowest_width_neighber
 
-		elif (eular2 < 0 and euler3 > 0):  ## leg 2 is the highest, leg 0 is the lowest
+		elif (euler2 < 0 and euler3 > 0):  ## leg 2 is the highest, leg 0 is the lowest
 			leg0 = lowest
 			leg1 = lowest_width_neighber
 			leg2 = highest
