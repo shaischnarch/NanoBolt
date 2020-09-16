@@ -18,17 +18,18 @@ def stand_pre_execution(sensor, sensor_offset):
 	(euler1, euler2, euler3) = sensor.euler
 	print((euler1, euler2, euler3))
 	offsets = [0,0,0,0]
+
 	if (abs(euler2) > sensor_act):
-		offsets[0] -= np.sign(euler2)
-		offsets[1] -= np.sign(euler2)
-		offsets[2] += np.sign(euler2)
-		offsets[3] += np.sign(euler2)
+		offsets[0] -= np.sign(euler2) * (1 + int(math.abs(euler2)/10))
+		offsets[1] -= np.sign(euler2) * (1 + int(math.abs(euler2)/10))
+		offsets[2] += np.sign(euler2) * (1 + int(math.abs(euler2)/10))
+		offsets[3] += np.sign(euler2) * (1 + int(math.abs(euler2)/10))
 
 	if (abs(euler3) > sensor_act):
-		offsets[0] += np.sign(euler3)
-		offsets[1] -= np.sign(euler3)
-		offsets[2] -= np.sign(euler3)
-		offsets[3] += np.sign(euler3)
+		offsets[0] += np.sign(euler3) * (1 + int(math.abs(euler3)/10))
+		offsets[1] -= np.sign(euler3) * (1 + int(math.abs(euler3)/10))
+		offsets[2] -= np.sign(euler3) * (1 + int(math.abs(euler3)/10))
+		offsets[3] += np.sign(euler3) * (1 + int(math.abs(euler3)/10))
 
 	for j in range(4):
 		lst = list(sensor_offset[j])
