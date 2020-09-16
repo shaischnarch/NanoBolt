@@ -20,16 +20,16 @@ def stand_pre_execution(sensor, sensor_offset):
 	offsets = [0,0,0,0]
 
 	if (abs(euler2) > sensor_act):
-		offsets[0] -= np.sign(euler2) * (1 + int(math.abs(euler2)/10))
-		offsets[1] -= np.sign(euler2) * (1 + int(math.abs(euler2)/10))
-		offsets[2] += np.sign(euler2) * (1 + int(math.abs(euler2)/10))
-		offsets[3] += np.sign(euler2) * (1 + int(math.abs(euler2)/10))
+		offsets[0] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsets[1] -= np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsets[2] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
+		offsets[3] += np.sign(euler2) * (1 + int(math.fabs(euler2)/5))
 
 	if (abs(euler3) > sensor_act):
-		offsets[0] += np.sign(euler3) * (1 + int(math.abs(euler3)/10))
-		offsets[1] -= np.sign(euler3) * (1 + int(math.abs(euler3)/10))
-		offsets[2] -= np.sign(euler3) * (1 + int(math.abs(euler3)/10))
-		offsets[3] += np.sign(euler3) * (1 + int(math.abs(euler3)/10))
+		offsets[0] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsets[1] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsets[2] -= np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
+		offsets[3] += np.sign(euler3) * (1 + int(math.fabs(euler3)/5))
 
 	for j in range(4):
 		lst = list(sensor_offset[j])
@@ -91,6 +91,8 @@ while True:
 						sensor_offset = stand_pre_execution(sensor, sensor_offset)
 						for i in range(4):
 							(offset1, offset2, offset3) = Settings.legs_offset[i]
+							if i>2: 
+								offset3= offset3-10
 							(sensor_offset1, sensor_offset2, sensor_offset3) = sensor_offset[i]
 							(theta1, theta2, theta3) = legIK(default_x + offset1 + sensor_offset1, default_y + offset2 + sensor_offset2, default_z + offset3 + sensor_offset3)
 							angles_servo = servo_angles([(theta1, theta2, theta3)], i)
