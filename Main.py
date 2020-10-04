@@ -1,6 +1,7 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
 from Plan.All_Plans import *
+from Plan import Modes
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
 from Helper_directory.Main_helper import *
@@ -140,6 +141,8 @@ two_leg_counter = 0
 current_leg_locations = zero_position()
 sleep(1)  # gives enough time to get to zero position
 
+###
+current_mode = Stable_4_legs(current_leg_locations)
 
 ## here starts communication with ps4 controller
 while True:
@@ -200,6 +203,7 @@ while True:
 							current_leg_locations[i] = (default_x + sensor_offset1, default_y + sensor_offset2, default_z + sensor_offset3)
 							angles_servo = servo_angles([(theta1, theta2, theta3)], i)
 							execute_movement(i, angles_servo[0])
+							#execute_movement(i, current_mode.angles_servo[i][0])
 						sleep(Settings.max_delay)
 						continue
 					###### END OF STANDING MODE ########
@@ -237,7 +241,7 @@ while True:
 						sleep(substep_delay)
 						continue
 
-
+					#need to change to is_finished_step
 					if (is_changed == True):
 						angles_rad = [[], [], [], []]
 						is_finished_step = False
@@ -254,6 +258,7 @@ while True:
 
 					for leg_num in range(4):
 						execute_movement(leg_num, all_angles[leg_num][current_substep_num])
+					#### current_mode.update_substep()
 						current_leg_locations[leg_num] = points[leg_num][current_substep_num]
 					current_substep_num += 1
 
