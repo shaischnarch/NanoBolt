@@ -44,7 +44,5 @@ min_Y = -25
 max_Y = -170
 
 ## robots sizes
-robot_length = 240
-robot_width = 80
-
-
+robot_length = 245
+robot_width = 100
