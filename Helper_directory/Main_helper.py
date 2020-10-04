@@ -35,3 +35,42 @@ def zero_position():
     #execute_movement(2, (90, 90, 90))
     #execute_movement(3, (90, 90, 90))
     return [(default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z)]
+
+
+
+def move_to_stand(current_legs_location):
+
+    ### speed parameter in mm per max_delay
+    speed = 5
+
+    default_with_offset = Settings.default_with_offset
+    max_dist = 0
+    for i in range(4):
+        (temp_x, temp_y, temp_z) = default_with_offset[i]
+        (curr_x, curr_y, curr_z) = current_legs_location[i]
+        diff_x = math.fabs(temp_x - curr_x)
+        if (diff_x > max_dist):
+            max_dist = diff_x
+        diff_y = math.fabs(temp_y - curr_y)
+        if (diff_y > max_dist):
+            max_dist = diff_y
+        diff_z = math.fabs(temp_z - curr_z)
+        if (diff_z > max_dist):
+            max_dist = diff_z
+
+    num_of_substeps = int(max_dist/speed) + 1
+
+    angles_rad = [[], [], [], []]
+
+    for leg_num in range(4):
+        (temp_x, temp_y, temp_z) = default_with_offset[i]
+        angles_rad[leg_num] = calculate_movement(current_legs_location[leg_num], (temp_x, temp_y, temp_z), 0, num_of_substeps) #### make sure that calculate movement is designed for both left and right
+        all_angles[leg_num] = servo_angles(angles_rad[leg_num], leg_num)
+
+
+    for current_substep_num in range(num_of_substeps+1):
+        for leg_num in range(4):
+            execute_movement(leg_num, all_angles[leg_num][current_substep_num])
+
+
+    return default_with_offset
