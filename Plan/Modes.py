@@ -1,4 +1,5 @@
 from Helper_directory import Settings
+from Helper_directory.Main_helper import move_to_stand
 ## Main virtual class, all functional modes of the robot inherit this class
 ## starts by moving the robot to a base standing position
 class Mode:
