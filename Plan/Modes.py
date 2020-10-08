@@ -1,5 +1,7 @@
 from Helper_directory import Settings
 from Helper_directory.Main_helper import move_to_stand
+from Calculations.All_calculations import calculate_points, servo_angles, legIK
+
 ## Main virtual class, all functional modes of the robot inherit this class
 ## starts by moving the robot to a base standing position
 class Mode:
@@ -37,7 +39,7 @@ class Mode:
 
 
 
-
+## Mode inherited class , where the robot is stable while all his legs on the ground
 class Stable_4_legs(Mode):
 
     def __init__(self, current_legs_location):
@@ -55,15 +57,16 @@ class Stable_4_legs(Mode):
         return
 
     def next_substep(self, sensor):
-        Stable_4_legs_sensor_helper(sensor)
+        self.Stable_4_legs_sensor_helper(sensor)
         for i in range(4):
             (offset1, offset2, offset3) = Settings.legs_offset[i]
             if i > 2:
                 offset3 = offset3 - 10
-            (sensor_offset1, sensor_offset2, sensor_offset3) = sensor_offset[i]
-            (theta1, theta2, theta3) = legIK(default_x + offset1 + sensor_offset1, default_y + offset2 + sensor_offset2,
-                                             default_z + offset3 + sensor_offset3)
-            current_leg_locations[i] = (default_x + sensor_offset1, default_y + sensor_offset2, default_z + sensor_offset3)
+            (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[i]
+            (theta1, theta2, theta3) = legIK(self.default_x + offset1 + sensor_offset1, self.default_y + offset2 + sensor_offset2,
+                                             self.default_z + offset3 + sensor_offset3)
+            current_leg_locations[i] = (self.default_x + offset1 + sensor_offset1, self.default_y +offset2+ sensor_offset2
+                                            , self.default_z +offset3+ sensor_offset3)
             self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
 
 

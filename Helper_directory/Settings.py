@@ -32,7 +32,7 @@ legs_offset = [(-20,-12,10),(5,-8,10),(2,-10,-23),(2,-12,-8)] # the offset for e
 #legs_offset = [(0,0,0),(0,0,0),(0,-15,-35),(0,-15,-35)]
 
 #the default values combined with the offset for each leg
-default_with_offset = []
+default_with_offset = [0,0,0,0]
 for i in range(4):
     (offset1, offset2, offset3) = legs_offset[i]
     default_with_offset[i] = (default_x + offset1, default_y + offset2, default_z + offset3)

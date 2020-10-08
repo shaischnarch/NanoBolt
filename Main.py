@@ -14,6 +14,119 @@ import adafruit_bno055
 import math
 
 
+
+
+###########################################################
+# Led Pin Definitions
+led = digitalio.DigitalInOut(board.D18)
+led.direction = digitalio.Direction.OUTPUT
+
+# IMU SETUP AND Definitions
+i2c = busio.I2C(board.SCL, board.SDA)
+sensor = adafruit_bno055.BNO055_I2C(i2c)
+
+## initialization
+servo_setup()  # starts i2c communication with servos
+
+
+
+
+#points = [[], [], [], []]
+#is_finished_step = True
+#all_angles = [[], [], [], []]
+#current_substep_num = 0
+#last_substep_num = 0
+####current_substep_num = [0, 0, 0, 0]
+####last_substep_num = [0, 0, 0, 0]
+#is_stand = True
+#is_2_leg = False
+#two_leg_lean = True ## True means legs 0 and 2 are touching the ground, False means legs 1 and 3 are touching the ground
+#two_leg_path = [[], [], [], []]
+#two_leg_offset = 40
+#two_leg_substeps = 80
+#two_leg_counter = 0
+
+
+current_leg_locations = zero_position()
+sleep(1)  # gives enough time to get to zero position
+
+###
+current_mode = Stable_4_legs(current_leg_locations)
+
+## here starts communication with ps4 controller
+while True:
+	led.value = True
+	time.sleep(0.5)
+	led.value = False
+	try:
+		with ControllerResource(ControllerRequirement(require_class=DualShock4)) as ds4:
+			while ds4.connected:
+				#turn led on
+				led.value = True
+				print('Controller Connected')
+				#sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
+				# main loop
+				while (ds4.connected):
+					(left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
+
+					#print(type(buttons_pressed))
+					#print(buttons_pressed)
+
+					################### switch modes #############################################
+					#if 'circle' in ds4.presses:
+					#    current_mode = Stable_4_legs(current_leg_locations)
+					#elif_________:
+					#   current_mode=_______________
+					#___________
+					#___________
+					#___________
+					################### switch modes #############################################
+
+
+
+					shut_down = current_mode.plan_movement(ds4)
+					if shut_down==True:
+						sleep(current_mode.substep_delay)
+						continue
+
+					#need to change to is_finished_step
+					if current_mode.is_finished_step == True:
+						current_mode.calculate_points()
+
+					current_mode.next_substep()
+					for leg_num in range(4):
+						execute_movement(i, current_mode.angles_servo[i][0])
+						# current_leg_locations[leg_num] = points[leg_num][current_substep_num]
+					current_mode.update_substep()
+
+					#current_substep_num += 1
+					#if (current_substep_num >= last_substep_num):
+					#	is_finished_step = True
+					# current_substep_num -= 1 ## this is here in case plan failed and is_changed == false
+
+					time.sleep(current_mode.substep_delay)
+
+
+				######### this is out of the while(1). Shutdown everything ########################
+
+	except IOError:
+		## set the robot to the starting zero position
+		current_leg_locations = zero_position()
+		#current_mode = Stable_4_legs(current_leg_locations)
+		# No DS4 controller found, wait for a bit and try again
+		print('Waiting for a DS4 controller connection')
+		sleep(0.5)  # temp
+		print("Euler angle: {}".format(sensor.euler))
+
+
+
+
+
+
+
+
+
+"""
 ######### *temp* for stand mode ###### changed in shai
 sensor_act = 1 # the value under which the robot is considered flat
 def stand_pre_execution(sensor, sensor_offset):
@@ -53,7 +166,10 @@ def stand_pre_execution(sensor, sensor_offset):
 		sensor_offset[j] = tuple(lst)
 	print(sensor_offset)
 	return sensor_offset
+"""
 
+
+"""
 ###########################################################
 ######### *temp* for 2-leg mode ###### changed in shai
 sensor_act = 1 # the value under which the robot is considered flat
@@ -102,24 +218,11 @@ def two_leg_pre_execution(sensor, sensor_offset, two_leg_lean):
 		sensor_offset[j] = tuple(lst)
 	print(sensor_offset)
 	return sensor_offset
+"""
 
 
-
-
-
-###########################################################
-# Led Pin Definitions
-led = digitalio.DigitalInOut(board.D18)
-led.direction = digitalio.Direction.OUTPUT
-
-# IMU SETUP AND Definitions
-i2c = busio.I2C(board.SCL, board.SDA)
-sensor = adafruit_bno055.BNO055_I2C(i2c)
-
-## initialization
-servo_setup()  # starts i2c communication with servos
-
-
+"""
+## main old version
 
 
 points = [[], [], [], []]
@@ -279,10 +382,7 @@ while True:
 		print('Waiting for a DS4 controller connection')
 		sleep(0.5)  # temp
 		print("Euler angle: {}".format(sensor.euler))
-
-
-
-
+"""
 
 
 

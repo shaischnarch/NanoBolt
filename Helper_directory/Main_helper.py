@@ -1,5 +1,5 @@
 from Excution.All_executions import *
-from Calculations.All_calculations import legIK, servo_angles
+from Calculations.All_calculations import legIK, servo_angles , calculate_movement
 from Helper_directory import Settings
 
 ## function used to set robot to the zero position
@@ -34,9 +34,8 @@ def zero_position():
     #execute_movement(1, (90, 90, 90))
     #execute_movement(2, (90, 90, 90))
     #execute_movement(3, (90, 90, 90))
-    return [(default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z)]
-
-
+    #return [(default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z)]
+    return Settings.default_with_offset ## return the default with offest insted the default
 
 def move_to_stand(current_legs_location):
 
