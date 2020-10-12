@@ -1,7 +1,7 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
 from Plan.All_Plans import *
-from Plan import Modes
+from Plan.Modes import *
 from approxeng.input.dualshock4 import DualShock4
 from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
 from Helper_directory.Main_helper import *
@@ -93,9 +93,9 @@ while True:
 					if current_mode.is_finished_step == True:
 						current_mode.calculate_points()
 
-					current_mode.next_substep()
+					current_mode.next_substep(sensor)
 					for leg_num in range(4):
-						execute_movement(i, current_mode.angles_servo[i][0])
+						execute_movement(leg_num, current_mode.angles_servo[leg_num][0])
 						# current_leg_locations[leg_num] = points[leg_num][current_substep_num]
 					current_mode.update_substep()
 

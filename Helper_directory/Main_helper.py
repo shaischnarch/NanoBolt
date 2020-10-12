@@ -1,6 +1,7 @@
 from Excution.All_executions import *
 from Calculations.All_calculations import legIK, servo_angles , calculate_movement
 from Helper_directory import Settings
+import math
 
 ## function used to set robot to the zero position
 def zero_position():
@@ -60,6 +61,7 @@ def move_to_stand(current_legs_location):
     num_of_substeps = int(max_dist/speed) + 1
 
     angles_rad = [[], [], [], []]
+    all_angles = [[], [], [], []]
 
     for leg_num in range(4):
         (temp_x, temp_y, temp_z) = default_with_offset[i]
