@@ -1,7 +1,6 @@
 from Helper_directory import Settings
 from Helper_directory.Main_helper import move_to_stand
-from Calculations.All_calculations import calculate_points, servo_angles, legIK
-import numpy as np
+from Calculations.All_calculations import calculate_points
 import math
 
 ## Main virtual class, all functional modes of the robot inherit this class

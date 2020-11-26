@@ -1,3 +1,7 @@
+from Helper_directory import Settings
+from Calculations.All_calculations import calculate_points, servo_angles, legIK
+import numpy as np
+import math
 from Modes_directory.Mode_Class import Mode
 
 ## Mode inherited class , where the robot is stable while all his legs on the ground
