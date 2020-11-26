@@ -69,13 +69,14 @@ while True:
 				#sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
 				# main loop
 				while (ds4.connected):
+					#  todo: change to adt, than add currentmode.change_mode and currentmode.controller_input
 					(left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
 					print(type(buttons_pressed))
 					print(buttons_pressed)
-					print(ds4.presses)
 
 					################### switch modes #############################################
+					current_mode.change_mode
 					# if 'circle' in ds4.presses:
 					#     current_mode = Stable_4_legs(current_leg_locations)
 					# elif 'triangle' in ds4.presses:
@@ -86,15 +87,27 @@ while True:
 					################### switch modes #############################################
 
 
-					current_mode.plan_movement(ds4)
-
-					if current_mode.pause_movement==True:
+					# movement has been stopped, in order to restore must reset to standing position using the 'options' button
+					if current_mode.stop_movement == True:
 						sleep(current_mode.substep_delay)
 						continue
 
-					#need to change to is_finished_step
+					# receives updated inputs, also used to update pause_movement
+					current_mode.controller_input(left_cx, left_cy, right_cx, right_cy, buttons_pressed)
+
+					# skip substep if pause_movement == True
+					if current_mode.pause_movement == True:
+						sleep(current_mode.substep_delay)
+						continue
+
+					# True if all the substeps were executed
 					if current_mode.is_finished_step == True:
+						# first plan the location for the next step
+						current_mode.plan_movement(left_cx, left_cy, right_cx, right_cy, buttons_pressed)
+						# than, calculate all the substeps along the way
 						current_mode.calculate_points()
+
+
 
 					current_mode.next_substep(sensor)
 					for leg_num in range(4):
@@ -102,10 +115,6 @@ while True:
 						# current_leg_locations[leg_num] = points[leg_num][current_substep_num]
 					current_mode.update_substep()
 
-					#current_substep_num += 1
-					#if (current_substep_num >= last_substep_num):
-					#	is_finished_step = True
-					# current_substep_num -= 1 ## this is here in case plan failed and is_changed == false
 
 					time.sleep(current_mode.substep_delay)
 

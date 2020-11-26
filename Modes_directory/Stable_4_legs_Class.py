@@ -5,6 +5,9 @@ import math
 from Modes_directory.Mode_Class import Mode
 
 ## Mode inherited class , where the robot is stable while all his legs on the ground
+#  In this mode the robot uses the imu sensor to keep its self standing level
+#  Controls: Left stick Y - change standing height
+#            L1 - Reset standing height to default height
 class Stable_4_legs(Mode):
 
     def __init__(self, current_legs_location):
@@ -12,28 +15,47 @@ class Stable_4_legs(Mode):
         self.pause_movement = False
         self.num_of_substeps = 1
         self.sensor_act = 1
+        self.standing_height = 0  # an addition to the height that is controlled by the controller, negative is robot standing taller
+        self.max_standing_height = 30  # the max height offset from the controller (in both up and down directions)
 
-    def plan_movement(self,  ds4):
-        pass
 
     def calculate_points(self):
         return
 
+
+    # Controls the height of the robot using the left stick
+    def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
+        if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
+            self.standing_height = 0
+            return
+        if left_cy > 0 and self.standing_height > -self.max_standing_height:
+            self.standing_height -= 1
+        if left_cy < 0 and self.standing_height > self.max_standing_height:
+            self.standing_height += 1
+
+
     def update_substep(self):
         return
+
 
     def next_substep(self, sensor):
         self.Stable_4_legs_sensor_helper(sensor)
         for i in range(4):
-            (offset1, offset2, offset3) = Settings.legs_offset[i]
-            if i > 2:
-                offset3 = offset3 - 10
+            (offsetX, offsetY, offsetZ) = Settings.legs_offset[i]
+            if i > 2:  # move back legs backwards
+                offsetZ = offsetZ - 10
             (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[i]
-            (theta1, theta2, theta3) = legIK(self.default_x + offset1 + sensor_offset1, self.default_y + offset2 + sensor_offset2,
-                                             self.default_z + offset3 + sensor_offset3)
-            self.current_legs_location[i] = (self.default_x + offset1 + sensor_offset1, self.default_y +offset2+ sensor_offset2
-                                            , self.default_z +offset3+ sensor_offset3)
-            self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
+            try:
+                x = self.default_x + offsetX + sensor_offset1
+                y = self.default_y + offsetY + sensor_offset2 + self.standing_height
+                z = self.default_z + offsetZ + sensor_offset3
+                (theta1, theta2, theta3) = legIK(x, y, z)
+                self.current_legs_location[i] = (x, y, z)
+                self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
+            except:
+                print('ERROR: Tried to stand too tall')
+                self.stop_movement = True
+
 
 
     def Stable_4_legs_sensor_helper(self, sensor):
