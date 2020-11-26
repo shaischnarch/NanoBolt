@@ -30,7 +30,7 @@ class Stable_4_legs(Mode):
             return
         if left_cy > 0 and self.standing_height > -self.max_standing_height:
             self.standing_height -= 1
-        if left_cy < 0 and self.standing_height > self.max_standing_height:
+        if left_cy < 0 and self.standing_height < self.max_standing_height:
             self.standing_height += 1
 
 

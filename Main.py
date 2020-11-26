@@ -76,7 +76,7 @@ while True:
 					print(buttons_pressed)
 
 					################### switch modes #############################################
-					current_mode.change_mode
+					#current_mode.change_mode
 					# if 'circle' in ds4.presses:
 					#     current_mode = Stable_4_legs(current_leg_locations)
 					# elif 'triangle' in ds4.presses:
