@@ -1,11 +1,13 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
 from Plan.All_Plans import *
-from Plan.Modes import *
-from approxeng.input.dualshock4 import DualShock4
-from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
+from Modes_directory import Mode_Class,Stable_4_legs_Class
 from Helper_directory.Main_helper import *
 from Helper_directory import Settings
+
+from approxeng.input.dualshock4 import DualShock4
+from approxeng.input.selectbinder import ControllerResource, ControllerRequirement
+
 import digitalio
 import time
 import board
@@ -51,7 +53,7 @@ current_leg_locations = zero_position()
 sleep(1)  # gives enough time to get to zero position
 
 ###
-current_mode = Stable_4_legs(current_leg_locations)
+current_mode = Stable_4_legs_Class.Stable_4_legs(current_leg_locations)
 
 ## here starts communication with ps4 controller
 while True:
@@ -69,23 +71,24 @@ while True:
 				while (ds4.connected):
 					(left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
-					#print(type(buttons_pressed))
-					#print(buttons_pressed)
+					print(type(buttons_pressed))
+					print(buttons_pressed)
+					print(ds4.presses)
 
 					################### switch modes #############################################
-					#if 'circle' in ds4.presses:
-					#    current_mode = Stable_4_legs(current_leg_locations)
-					#elif_________:
-					#   current_mode=_______________
+					# if 'circle' in ds4.presses:
+					#     current_mode = Stable_4_legs(current_leg_locations)
+					# elif 'triangle' in ds4.presses:
+					#    current_mode = Pause()
 					#___________
 					#___________
 					#___________
 					################### switch modes #############################################
 
 
+					current_mode.plan_movement(ds4)
 
-					shut_down = current_mode.plan_movement(ds4)
-					if shut_down==True:
+					if current_mode.pause_movement==True:
 						sleep(current_mode.substep_delay)
 						continue
 

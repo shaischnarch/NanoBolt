@@ -1,56 +1,16 @@
-from Helper_directory import Settings
-from Helper_directory.Main_helper import move_to_stand
-from Calculations.All_calculations import calculate_points, servo_angles, legIK
-import numpy as np
-import math
-
-## Main virtual class, all functional modes of the robot inherit this class
-## starts by moving the robot to a base standing position
-class Mode:
-
-    def __init__(self, current_legs_location):
-        self.default_x = Settings.default_x
-        self.default_y = Settings.default_y
-        self.default_z = Settings.default_z
-        self.substep_delay = Settings.max_delay
-        self.num_of_substeps = 32
-        self.current_substep = 0
-        self.is_finished_step = True
-        self.heights = [0, 0, 0, 0]
-        self.end_points = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
-        self.points = [[], [], [], []]
-        self.angles_servo = [[], [], [], []]
-        self.sensor_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
-        self.current_legs_location = move_to_stand(current_legs_location)
-
-    def calculate_points(self):
-        for leg_num in range(4):
-            self.points[leg_num] = calculate_points(self.current_legs_location[leg_num], self.end_points[leg_num], self.heights[leg_num], self.num_of_substeps)
-        self.current_substep = 0
-        self.is_finished_step = False
-
-
-    def update_substep(self):
-        self.current_substep += 1
-        for leg_num in range(4):
-            self.current_legs_location[leg_num] = points[leg_num][self.current_substep]
-        if (self.current_substep >= self.num_of_substeps):
-            self.is_finished_step = True
-
-
-
-
+from Modes_directory.Mode_Class import Mode
 
 ## Mode inherited class , where the robot is stable while all his legs on the ground
 class Stable_4_legs(Mode):
 
     def __init__(self, current_legs_location):
         Mode.__init__(self, current_legs_location)
+        self.pause_movement = False
         self.num_of_substeps = 1
         self.sensor_act = 1
 
     def plan_movement(self,  ds4):
-        return False
+        pass
 
     def calculate_points(self):
         return
@@ -107,23 +67,4 @@ class Stable_4_legs(Mode):
             lst[1] += offsetsY[j]
             lst[2] += offsetsZ[j]
             self.sensor_offset[j] = tuple(lst)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
