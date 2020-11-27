@@ -6,6 +6,7 @@ from Modes_directory.Mode_Class import Mode
 
 ## Mode inherited class , where the robot is stable while all his legs on the ground
 #  In this mode the robot uses the imu sensor to keep its self standing level
+#  To go into this mode: press SQUARE on the controller when in stand mode (Mode)
 #  Controls: Left stick Y - change standing height
 #            L1 - Reset standing height to default height
 class Stable_4_legs(Mode):
@@ -24,6 +25,7 @@ class Stable_4_legs(Mode):
 
 
     # Controls the height of the robot using the left stick
+    # todo: make transition back to standing_height = 0 smoother (robot has hard time, especially when he needs to get up)
     def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
         if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
             self.standing_height = 0
@@ -34,26 +36,25 @@ class Stable_4_legs(Mode):
             self.standing_height += 1
 
 
+    # Overwrite update_substep to do nothing
     def update_substep(self):
         return
 
 
-    def next_substep(self, sensor):
+    def prep_substep(self, sensor):
         self.Stable_4_legs_sensor_helper(sensor)
         for i in range(4):
             (offsetX, offsetY, offsetZ) = Settings.legs_offset[i]
-            if i > 2:  # move back legs backwards
-                offsetZ = offsetZ - 10
             (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[i]
             try:
                 x = self.default_x + offsetX + sensor_offset1
                 y = self.default_y + offsetY + sensor_offset2 + self.standing_height
                 z = self.default_z + offsetZ + sensor_offset3
                 (theta1, theta2, theta3) = legIK(x, y, z)
-                self.current_legs_location[i] = (x, y, z)
                 self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
+                self.current_legs_location[i] = (x, y, z)
             except:
-                print('ERROR: Tried to stand too tall')
+                print('ERROR: Tried to move to impossible position')
                 self.stop_movement = True
 
 

@@ -1,7 +1,7 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
 from Plan.All_Plans import *
-from Modes_directory import Mode_Class,Stable_4_legs_Class
+from Modes_directory import Mode_Class,Stable_4_legs_Class, Stable_3_legs_Class
 from Helper_directory.Main_helper import *
 from Helper_directory import Settings
 
@@ -53,7 +53,7 @@ current_leg_locations = zero_position()
 sleep(1)  # gives enough time to get to zero position
 
 ###
-current_mode = Stable_4_legs_Class.Stable_4_legs(current_leg_locations)
+current_mode = Mode_Class.Mode(current_leg_locations)
 
 ## here starts communication with ps4 controller
 while True:
@@ -69,18 +69,18 @@ while True:
 				#sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
 				# main loop
 				while (ds4.connected):
-					#  todo: change to adt, than add currentmode.change_mode and currentmode.controller_input
+
 					(left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
-					print(type(buttons_pressed))
-					print(buttons_pressed)
 
 					################### switch modes #############################################
-					#current_mode.change_mode
-					# if 'circle' in ds4.presses:
-					#     current_mode = Stable_4_legs(current_leg_locations)
-					# elif 'triangle' in ds4.presses:
-					#    current_mode = Pause()
+					# current_mode.change_mode todo: figure out where to put change_mode, either here or in Mode_Class
+					if 'r2' in buttons_pressed:
+						current_mode = Mode_Class.Mode(current_leg_locations)
+					elif 'cross' in buttons_pressed:
+						current_mode = Stable_4_legs_Class.Stable_4_legs(current_leg_locations)
+					elif 'triangle' in buttons_pressed:
+						current_mode = Stable_3_legs_Class.Stable_3_legs(current_leg_locations)
 					#___________
 					#___________
 					#___________
@@ -108,8 +108,11 @@ while True:
 						current_mode.calculate_points()
 
 
-
-					current_mode.next_substep(sensor)
+					# Execute substep:
+					# Firstly calculate the servo values while taking the sensor value into consideration - current_mode.next_substep(sensor)
+					# Than execute the movement for all 4 legs
+					# Lastly prepare for the next substep, also put up is_finished_step if the step ended - current_mode.update_substep()
+					current_mode.prep_substep(sensor)
 					for leg_num in range(4):
 						execute_movement(leg_num, current_mode.angles_servo[leg_num][0])
 						# current_leg_locations[leg_num] = points[leg_num][current_substep_num]
