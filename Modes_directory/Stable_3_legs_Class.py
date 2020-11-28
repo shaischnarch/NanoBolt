@@ -32,7 +32,7 @@ class Stable_3_legs(Mode):
             self.points[i] = [(Settings.default_x, Settings.default_y, Settings.default_z)]
 
 
-        self.default_right_offset = [(45,0,10), (0,30,0), (-30,0,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
+        self.default_right_offset = [(45,0,10), (0,30,0), (-25,-10,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
         self.default_left_offset = [(0,30,0), (10,0,10), (0,10,0), (-10,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
         self.stand_to_3_legs()  # setup transition step
 
@@ -51,11 +51,13 @@ class Stable_3_legs(Mode):
 
 
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
-        print("plan")
+        
         # if robot is in stable_3_legs_mode
         if self.action == 0:
+            print("plan")
             self.num_of_substeps = 1
-            self.end_points = self.current_legs_location
+            for i in range(4):
+                self.end_points[i] = self.points[i][0] 
             return
 
         # start of fist bump mode - move leg into default position
