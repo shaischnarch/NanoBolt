@@ -55,9 +55,6 @@ class Stable_3_legs(Mode):
         # if robot is in stable_3_legs_mode
         if self.action == 0:
             print("plan")
-            self.num_of_substeps = 1
-            for i in range(4):
-                self.end_points[i] = self.points[i][0] 
             return
 
         # start of fist bump mode - move leg into default position
@@ -96,6 +93,16 @@ class Stable_3_legs(Mode):
             self.end_points[i] = (def_x + offset_x + fist_x, def_y + offset_y + fist_y, def_z + offset_z + fist_z)
 
 
+    # Overwrite regular calculate_points when in leg in air mode, when in fist bump, use regular.
+    # When in air mode: make points stay the same value. This is done because the movement of the leg is done using offsets
+    def calculate_points(self):
+        if self.action == 0:
+            for i in range(4):
+                self.points[i][0] = self.points[i][self.num_of_substeps]
+            self.num_of_substeps = 0
+            self.current_substep = 0
+        else:
+            Mode.calculate_points(self)
 
 
     # Receives input from the controller.
@@ -116,12 +123,14 @@ class Stable_3_legs(Mode):
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
                 self.leg_in_air = 1
+                self.stand_to_3_legs()
             elif 'dleft' in buttons_pressed:
                 move_to_stand(current_legs_location)
                 self.leg_height = 0
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
                 self.leg_in_air = 0
+                self.stand_to_3_legs()
             elif 'dup' in buttons_pressed and self.leg_height < self.max_leg_height:
                 self.leg_height += 1
             elif 'ddown' in buttons_pressed and self.leg_height > -self.max_leg_height:
@@ -149,16 +158,8 @@ class Stable_3_legs(Mode):
                 air_leg = 1
             else:
                 air_leg = 0
-            # print(air_leg)
-            # print(self.current_substep)
-            # print(self.num_of_substeps)
-            # print('next')
             self.controller_offset = (self.leg_offset_x, self.leg_height, self.leg_offset_z)  # leg movement as set by the controller
-            # (temp_x, temp_y, temp_z) = self.points[air_leg][self.current_substep]
-            # new_x = temp_x + self.leg_offset_x
-            # new_y = temp_y + self.leg_height
-            # new_z = temp_z + self.leg_offset_z
-            # self.points[air_leg][self.current_substep] = (new_x, new_y, new_z)
+
 
 
     # for now use the version form Mode. todo: write a version to take the sensor into consideration
