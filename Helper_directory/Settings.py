@@ -28,7 +28,7 @@ height_normalization = 0.25**(-height_power)
 
 ## default values zero position
 default_x = -25
-default_y = -135
+default_y = -130
 default_z = 0
 
 
