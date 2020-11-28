@@ -27,11 +27,12 @@ class Stable_3_legs(Mode):
         self.max_offset = 30
         self.leg_offset_x = 0  # positive is inside (take which leg is in the air into consideration)
         self.leg_offset_z = 0  # positive is forward
+        self.controller_offset = (0,0,0)  # leg movement as set by the controller
         for i in range(4):
             self.points[i] = [(Settings.default_x, Settings.default_y, Settings.default_z)]
 
 
-        self.default_right_offset = [(10,0,10), (0,30,0), (-10,0,10), (0,10,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
+        self.default_right_offset = [(45,0,10), (0,30,0), (-30,0,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
         self.default_left_offset = [(0,30,0), (10,0,10), (0,10,0), (-10,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
         self.stand_to_3_legs()  # setup transition step
 
@@ -50,6 +51,7 @@ class Stable_3_legs(Mode):
 
 
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
+        print("plan")
         # if robot is in stable_3_legs_mode
         if self.action == 0:
             self.num_of_substeps = 1
@@ -144,9 +146,11 @@ class Stable_3_legs(Mode):
                 air_leg = 1
             else:
                 air_leg = 0
-            print(self.points)
             print(air_leg)
             print(self.current_substep)
+            print(self.num_of_substeps)
+            print('next')
+            self.controller_offset = (self.leg_offset_x, self.leg_height, self.leg_offset_z)  # leg movement as set by the controller
             (temp_x, temp_y, temp_z) = self.points[air_leg][self.current_substep]
             new_x = temp_x + self.leg_offset_x
             new_y = temp_y + self.leg_height
@@ -169,9 +173,11 @@ class Stable_3_legs(Mode):
             (def_x, def_y, def_z) = Settings.default_with_offset[i]
             if self.leg_in_air == 1:
                 (offset_x, offset_y, offset_z) = self.default_right_offset[i]
-                print((offset_x, offset_y, offset_z))
             else:
                 (offset_x, offset_y, offset_z) = self.default_left_offset[i]
             self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
 
         self.is_finished_step = False
+        self.calculate_points()
+
+        

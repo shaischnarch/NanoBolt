@@ -1,6 +1,6 @@
 from Helper_directory import Settings
 from Helper_directory.Main_helper import move_to_stand
-from Calculations.All_calculations import calculate_points
+from Calculations.All_calculations import calculate_points ,servo_angles, legIK
 import math
 
 
@@ -73,14 +73,13 @@ class Mode:
             x = point_x + offsetX + sensor_offset1
             y = point_y + offsetY + sensor_offset2
             z = point_z + offsetZ + sensor_offset3
+            print((x,y,z))
             try:
                 (theta1, theta2, theta3) = legIK(x, y, z)
-                print((theta1, theta2, theta3))
                 self.angles_servo[leg_num] = servo_angles([(theta1, theta2, theta3)], leg_num)
                 self.current_legs_location[leg_num] = (x, y, z)
             except:
                 print('ERROR: Tried to move to impossible position')
-                print((x,y,z))
                 self.stop_movement = True
 
 
