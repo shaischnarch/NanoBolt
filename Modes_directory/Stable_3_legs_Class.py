@@ -103,6 +103,7 @@ class Stable_3_legs(Mode):
         if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
             self.action = 1  # go into fist bump mode
             self.is_finished_step = True  # start immediately the fist bump
+            self.controller_offset = (0,0,0)
             return
 
         # allow controller input only when not in fist bump mode
@@ -146,16 +147,16 @@ class Stable_3_legs(Mode):
                 air_leg = 1
             else:
                 air_leg = 0
-            print(air_leg)
-            print(self.current_substep)
-            print(self.num_of_substeps)
-            print('next')
+            # print(air_leg)
+            # print(self.current_substep)
+            # print(self.num_of_substeps)
+            # print('next')
             self.controller_offset = (self.leg_offset_x, self.leg_height, self.leg_offset_z)  # leg movement as set by the controller
-            (temp_x, temp_y, temp_z) = self.points[air_leg][self.current_substep]
-            new_x = temp_x + self.leg_offset_x
-            new_y = temp_y + self.leg_height
-            new_z = temp_z + self.leg_offset_z
-            self.points[air_leg][self.current_substep] = (new_x, new_y, new_z)
+            # (temp_x, temp_y, temp_z) = self.points[air_leg][self.current_substep]
+            # new_x = temp_x + self.leg_offset_x
+            # new_y = temp_y + self.leg_height
+            # new_z = temp_z + self.leg_offset_z
+            # self.points[air_leg][self.current_substep] = (new_x, new_y, new_z)
 
 
     # for now use the version form Mode. todo: write a version to take the sensor into consideration
@@ -180,4 +181,3 @@ class Stable_3_legs(Mode):
         self.is_finished_step = False
         self.calculate_points()
 
-        

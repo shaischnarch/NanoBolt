@@ -67,12 +67,13 @@ class Mode:
     # @updates: current_legs_location with the real time location
     def prep_substep(self, sensor):
         for leg_num in range(4):
-            (point_x, point_y, point_z) = self.points[leg_num][self.current_substep]
-            (offsetX, offsetY, offsetZ) = Settings.legs_offset[leg_num]
-            (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[leg_num]
-            x = point_x + offsetX + sensor_offset1
-            y = point_y + offsetY + sensor_offset2
-            z = point_z + offsetZ + sensor_offset3
+            (point_x, point_y, point_z) = self.points[leg_num][self.current_substep]  # The calculated target location
+            (offsetX, offsetY, offsetZ) = Settings.legs_offset[leg_num]  # Offsets because of physical leg differences (legs 0 position)
+            (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[leg_num]  # Offsets dictated by the sensor
+            (controller_offset1, controller_offset2, controller_offset3) = self.controller_offset[leg_num]  # Offsets set by the user with the controller - for example raise robot height
+            x = point_x + offsetX + sensor_offset1 + controller_offset1
+            y = point_y + offsetY + sensor_offset2 + controller_offset2
+            z = point_z + offsetZ + sensor_offset3 + controller_offset3
             print((x,y,z))
             try:
                 (theta1, theta2, theta3) = legIK(x, y, z)
