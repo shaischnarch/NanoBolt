@@ -27,7 +27,7 @@ class Stable_3_legs(Mode):
         self.max_offset = 30
         self.leg_offset_x = 0  # positive is inside (take which leg is in the air into consideration)
         self.leg_offset_z = 0  # positive is forward
-        self.controller_offset = (0,0,0)  # leg movement as set by the controller
+        self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]  # leg movement as set by the controller
         for i in range(4):
             self.points[i] = [(Settings.default_x, Settings.default_y, Settings.default_z)]
 
@@ -112,7 +112,8 @@ class Stable_3_legs(Mode):
         if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
             self.action = 1  # go into fist bump mode
             self.is_finished_step = True  # start immediately the fist bump
-            self.controller_offset = (0,0,0)
+            self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+             
             return
 
         # allow controller input only when not in fist bump mode
@@ -154,11 +155,8 @@ class Stable_3_legs(Mode):
                 if left_cx < 0 and self.leg_offset_x < self.max_offset:
                     self.leg_offset_x += 1
 
-            if self.leg_in_air == 1:
-                air_leg = 1
-            else:
-                air_leg = 0
-            self.controller_offset = (self.leg_offset_x, self.leg_height, self.leg_offset_z)  # leg movement as set by the controller
+           
+            self.controller_offset[self.leg_in_air] = (self.leg_offset_x, self.leg_height, self.leg_offset_z)  # leg movement as set by the controller
 
 
 
@@ -182,5 +180,5 @@ class Stable_3_legs(Mode):
             self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
 
         self.is_finished_step = False
-        self.calculate_points()
+        Mode.calculate_points(self)
 
