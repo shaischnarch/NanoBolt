@@ -20,7 +20,7 @@ class Stable_3_legs(Mode):
     def __init__(self, current_legs_location):
         Mode.__init__(self, current_legs_location)
         self.pause_movement = False
-        self.leg_in_air = right
+        self.leg_in_air = 1  # 1 is front right leg, 0 is front left leg
         self.leg_height = 0  # an addition to the height that is controlled by the controller, positive is leg lifted higher
         self.max_leg_height = 30  # the max height offset from the controller (in both up and down directions)
         # the leg position controlled by the left stick
@@ -63,7 +63,7 @@ class Stable_3_legs(Mode):
         # fist bump step 2 - move give fist forward
         elif self.action == 2:
             self.action = 3
-            if self.leg_in_air == right:
+            if self.leg_in_air == 1:
                 self.fist_bump_offsets[1] = (0, 0, self.fist_bump_len)
             else:
                 self.fist_bump_offsets[0] = (0, 0, self.fist_bump_len)
@@ -82,7 +82,7 @@ class Stable_3_legs(Mode):
         for i in range(4):
             (def_x, def_y, def_z) = Settings.default_with_offset[i]
             (fist_x, fist_y, fist_z) = self.fist_bump_offsets[i]
-            if self.leg_in_air == right:
+            if self.leg_in_air == 1:
                 (offset_x, offset_y, offset_z) = self.default_right_offset[i]
             else:
                 (offset_x, offset_y, offset_z) = self.default_left_offset[i]
@@ -107,13 +107,13 @@ class Stable_3_legs(Mode):
                 self.leg_height = 0
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
-                self.leg_in_air = right
+                self.leg_in_air = 1
             elif 'dleft' in buttons_pressed:
                 move_to_stand(current_legs_location)
                 self.leg_height = 0
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
-                self.leg_in_air = left
+                self.leg_in_air = 0
             elif 'dup' in buttons_pressed and self.leg_height < self.max_leg_height:
                 self.leg_height += 1
             elif 'ddown' in buttons_pressed and self.leg_height > -self.max_leg_height:
@@ -126,7 +126,7 @@ class Stable_3_legs(Mode):
                 self.leg_offset_z -= 1
 
             # Control movement in the x direction. Positive x is towards the inside of the robot, so we must take leg_in_air into consideration
-            if self.leg_in_air == left:
+            if self.leg_in_air == 0:
                 if left_cx > 0 and self.leg_offset_x < self.max_offset:
                     self.leg_offset_x += 1
                 if left_cx < 0 and self.leg_offset_x > -self.max_offset:
@@ -137,7 +137,7 @@ class Stable_3_legs(Mode):
                 if left_cx < 0 and self.leg_offset_x < self.max_offset:
                     self.leg_offset_x += 1
 
-            if self.leg_in_air == right:
+            if self.leg_in_air == 1:
                 air_leg = 1
             else:
                 air_leg = 0
@@ -161,7 +161,7 @@ class Stable_3_legs(Mode):
     def stand_to_3_legs(self):
         for i in range(4):
             (def_x, def_y, def_z) = Settings.default_with_offset[i]
-            if self.leg_in_air == right:
+            if self.leg_in_air == 1:
                 (offset_x, offset_y, offset_z) = self.default_right_offset[i]
             else:
                 (offset_x, offset_y, offset_z) = self.default_left_offset[i]
