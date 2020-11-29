@@ -131,6 +131,7 @@ class Stable_3_legs(Mode):
             else:
                 (offset_x, offset_y, offset_z) = self.default_left_offset[i]
             self.end_points[i] = (def_x + offset_x + fist_x, def_y + offset_y + fist_y, def_z + offset_z + fist_z)
+        print("end_points: {}".format(self.end_points))
 
 
     # Overwrite regular calculate_points when in leg in air mode, when in fist bump, use regular.
