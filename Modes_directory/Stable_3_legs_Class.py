@@ -33,7 +33,7 @@ class Stable_3_legs(Mode):
             self.points[i] = [(Settings.default_x, Settings.default_y, Settings.default_z)]
 
 
-        self.default_right_offset = [(45,0,10), (0,30,0), (-25,-10,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
+        self.default_right_offset = [(40,0,10), (0,50,0), (-15,0,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
         self.default_left_offset = [(0,30,0), (10,0,10), (0,10,0), (-10,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
 
         # This variable is used to determine the action of the robot in this mode.
@@ -55,6 +55,7 @@ class Stable_3_legs(Mode):
         # move robot to stable 3_legs_mode:
         # first step: Raise robot and lean, this step is needed because the robot has a hard time getting up with 2 legs.
         if self.action == -1:
+            print("\n\n\n-1")
             self.num_of_substeps = 32
             self.action = -2
 
@@ -75,7 +76,8 @@ class Stable_3_legs(Mode):
         # second step: lift leg in the air
         # uses the default_left/right_offsets, change this values to change the starting 3 legs position
         if self.action == -2:
-            self.action = 0
+            print("\n\n\n-2")
+            self.action = -3
             for i in range(4):
                 (def_x, def_y, def_z) = Settings.default_with_offset[i]
                 if self.leg_in_air == 1:
@@ -83,6 +85,11 @@ class Stable_3_legs(Mode):
                 else:
                     (offset_x, offset_y, offset_z) = self.default_left_offset[i]
                 self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
+            return
+
+        # lastly, let the last step finish, than switch to action = 0
+        if self.action == -3:
+            self.action = 0
             return
 
         # if robot is in stable_3_legs_mode
