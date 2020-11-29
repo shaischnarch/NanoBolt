@@ -69,7 +69,7 @@ while True:
 				#sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
 				# main loop
 				while (ds4.connected):
-
+					
 					(left_cx, left_cy, right_cx, right_cy, buttons_pressed) = controller_call(ds4)
 
 
@@ -94,6 +94,7 @@ while True:
 
 					# receives updated inputs, also used to update pause_movement
 					current_mode.controller_input(left_cx, left_cy, right_cx, right_cy, buttons_pressed)
+					
 
 					# skip substep if pause_movement == True
 					if current_mode.pause_movement == True:

@@ -36,14 +36,14 @@ def zero_position():
     #execute_movement(2, (90, 90, 90))
     #execute_movement(3, (90, 90, 90))
     #return [(default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z), (default_x, default_y, default_z)]
-    return Settings.default_with_offset ## return the default with offest insted the default
+    return Settings.default_with_offset[:] ## return the default with offest insted the default
 
 def move_to_stand(current_legs_location):
 
     ### speed parameter in mm per max_delay
     speed = 5
 
-    default_with_offset = Settings.default_with_offset
+    default_with_offset = Settings.default_with_offset[:]
     max_dist = 0
     for i in range(4):
         (temp_x, temp_y, temp_z) = default_with_offset[i]

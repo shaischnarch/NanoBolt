@@ -33,7 +33,7 @@ class Stable_3_legs(Mode):
             self.points[i] = [(Settings.default_x, Settings.default_y, Settings.default_z)]
 
 
-        self.default_right_offset = [(40,0,10), (0,50,0), (-15,0,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
+        self.default_right_offset = [(40,0,10), (0,50,0), (-15,0,10), (0,10,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
         self.default_left_offset = [(0,30,0), (10,0,10), (0,10,0), (-10,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
 
         # This variable is used to determine the action of the robot in this mode.
@@ -122,7 +122,7 @@ class Stable_3_legs(Mode):
             self.num_of_substeps = 32
             self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
-
+        print("Settings.default_with_offset: {}".format(Settings.default_with_offset))
         for i in range(4):
             (def_x, def_y, def_z) = Settings.default_with_offset[i]
             (fist_x, fist_y, fist_z) = self.fist_bump_offsets[i]
@@ -130,6 +130,9 @@ class Stable_3_legs(Mode):
                 (offset_x, offset_y, offset_z) = self.default_right_offset[i]
             else:
                 (offset_x, offset_y, offset_z) = self.default_left_offset[i]
+            print("Settings.default_with_offset[i]: {}".format((def_x, def_y, def_z)))
+            print("self.fist_bump_offsets[i]: {}".format((fist_x, fist_y, fist_z)))
+            print("self.default_right_offset[i]: {}".format((offset_x, offset_y, offset_z)))
             self.end_points[i] = (def_x + offset_x + fist_x, def_y + offset_y + fist_y, def_z + offset_z + fist_z)
         print("end_points: {}".format(self.end_points))
 

@@ -43,6 +43,7 @@ class Stable_4_legs(Mode):
 
     def prep_substep(self, sensor):
         self.Stable_4_legs_sensor_helper(sensor)
+        
         for i in range(4):
             (offsetX, offsetY, offsetZ) = Settings.legs_offset[i]
             (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[i]
@@ -53,7 +54,9 @@ class Stable_4_legs(Mode):
                 print((x,y,z))
                 (theta1, theta2, theta3) = legIK(x, y, z)
                 self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
+                print("settingsssssssssssssssss3{} {}: ".format(i,Settings.default_with_offset))
                 self.current_legs_location[i] = (x, y, z)
+                print("settingsssssssssssssssss4{} {}: ".format(i,Settings.default_with_offset))
             except:
                 print('ERROR: Tried to move to impossible position')
                 self.stop_movement = True
