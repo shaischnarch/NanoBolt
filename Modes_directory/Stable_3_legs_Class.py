@@ -20,6 +20,7 @@ class Stable_3_legs(Mode):
     def __init__(self, current_legs_location):
         Mode.__init__(self, current_legs_location)
         self.pause_movement = False
+        self.is_finished_step = True
         self.leg_in_air = 1  # 1 is front right leg, 0 is front left leg
         self.leg_height = 0  # an addition to the height that is controlled by the controller, positive is leg lifted higher
         self.max_leg_height = 30  # the max height offset from the controller (in both up and down directions)
@@ -34,13 +35,12 @@ class Stable_3_legs(Mode):
 
         self.default_right_offset = [(45,0,10), (0,30,0), (-25,-10,10), (0,15,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
         self.default_left_offset = [(0,30,0), (10,0,10), (0,10,0), (-10,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
-        self.stand_to_3_legs()  # setup transition step
 
         # This variable is used to determine the action of the robot in this mode.
+        # -1 and below - move robot to starting 3 legs position, starts at -1 and continues going down
         # 0 - robot is in stable_3_legs_mode, and the user can control its leg
-        # 1- - robot is in fist bump mode, each step inside the fist bump mode is a new value
-        # final - the final step in the fist bump mode, after this the robot returns to action = 0
-        self.action = 0
+        # 1 and above - robot is in fist bump mode, each step inside the fist bump mode is a new value
+        self.action = -1
         self.fist_bump_len = 35  # how far to extend fist bump, in millimeters
         self.fist_bump_delay = 5  # how long to delay retracting the arm, actual delay = self.fist_bump_delay * self.substep_delay
         # used for making the fist bump happen, its values are updated in plan_movement
@@ -51,7 +51,40 @@ class Stable_3_legs(Mode):
 
 
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
-        
+
+        # move robot to stable 3_legs_mode:
+        # first step: Raise robot and lean, this step is needed because the robot has a hard time getting up with 2 legs.
+        if self.action == -1:
+            self.num_of_substeps = 32
+            self.action = -2
+
+            #  set all legs to their final target position, but let all the legs help lift
+            for i in range(4):
+                (def_x, def_y, def_z) = Settings.default_with_offset[i]
+                if self.leg_in_air == 1:
+                    (offset_x, offset_y, offset_z) = self.default_right_offset[i]
+                    if i == 1 or i == 3:
+                        offset_y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
+                else:
+                    (offset_x, offset_y, offset_z) = self.default_left_offset[i]
+                    if i == 0 or i == 2:
+                        offset_y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
+                self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
+            return
+
+        # second step: lift leg in the air
+        # uses the default_left/right_offsets, change this values to change the starting 3 legs position
+        if self.action == -2:
+            self.action = 0
+            for i in range(4):
+                (def_x, def_y, def_z) = Settings.default_with_offset[i]
+                if self.leg_in_air == 1:
+                    (offset_x, offset_y, offset_z) = self.default_right_offset[i]
+                else:
+                    (offset_x, offset_y, offset_z) = self.default_left_offset[i]
+                self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
+            return
+
         # if robot is in stable_3_legs_mode
         if self.action == 0:
             print("plan")
@@ -124,14 +157,14 @@ class Stable_3_legs(Mode):
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
                 self.leg_in_air = 1
-                self.stand_to_3_legs()
+                self.action = -1  # Move robot back to starting 3 legs position
             elif 'dleft' in buttons_pressed:
                 move_to_stand(current_legs_location)
                 self.leg_height = 0
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
                 self.leg_in_air = 0
-                self.stand_to_3_legs()
+                self.action = -1  # Move robot back to starting 3 legs position
             elif 'dup' in buttons_pressed and self.leg_height < self.max_leg_height:
                 self.leg_height += 1
             elif 'ddown' in buttons_pressed and self.leg_height > -self.max_leg_height:
@@ -170,15 +203,15 @@ class Stable_3_legs(Mode):
     # This methods takes into consideration the leg that needs to be lifted, and updates the endpoints accordingly
     # Note: this method sets is_finished_step = false in order for the robot to consider this setup a step
     # Currently, move legs as if robot is a square, might update according to results
-    def stand_to_3_legs(self):
-        for i in range(4):
-            (def_x, def_y, def_z) = Settings.default_with_offset[i]
-            if self.leg_in_air == 1:
-                (offset_x, offset_y, offset_z) = self.default_right_offset[i]
-            else:
-                (offset_x, offset_y, offset_z) = self.default_left_offset[i]
-            self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
-
-        self.is_finished_step = False
-        Mode.calculate_points(self)
-
+    # def stand_to_3_legs(self):
+    #     for i in range(4):
+    #         (def_x, def_y, def_z) = Settings.default_with_offset[i]
+    #         if self.leg_in_air == 1:
+    #             (offset_x, offset_y, offset_z) = self.default_right_offset[i]
+    #         else:
+    #             (offset_x, offset_y, offset_z) = self.default_left_offset[i]
+    #         self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
+    #
+    #     self.is_finished_step = False
+    #     Mode.calculate_points(self)
+    #
