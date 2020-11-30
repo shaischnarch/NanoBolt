@@ -51,12 +51,9 @@ class Stable_4_legs(Mode):
                 x = self.default_x + offsetX + sensor_offset1
                 y = self.default_y + offsetY + sensor_offset2 + self.standing_height
                 z = self.default_z + offsetZ + sensor_offset3
-                print((x,y,z))
                 (theta1, theta2, theta3) = legIK(x, y, z)
                 self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
-                print("settingsssssssssssssssss3{} {}: ".format(i,Settings.default_with_offset))
                 self.current_legs_location[i] = (x, y, z)
-                print("settingsssssssssssssssss4{} {}: ".format(i,Settings.default_with_offset))
             except:
                 print('ERROR: Tried to move to impossible position')
                 self.stop_movement = True

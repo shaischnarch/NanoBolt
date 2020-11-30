@@ -84,6 +84,7 @@ class Mode:
             except:
                 print('ERROR: Tried to move to impossible position')
                 self.stop_movement = True
+        print("")
 
 
     # Updates internal values for the next substep.

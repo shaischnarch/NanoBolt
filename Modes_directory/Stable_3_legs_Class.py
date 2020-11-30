@@ -55,7 +55,6 @@ class Stable_3_legs(Mode):
         # move robot to stable 3_legs_mode:
         # first step: Raise robot and lean, this step is needed because the robot has a hard time getting up with 2 legs.
         if self.action == -1:
-            print("\n\n\n-1")
             self.num_of_substeps = 32
             self.action = -2
 
@@ -76,7 +75,6 @@ class Stable_3_legs(Mode):
         # second step: lift leg in the air
         # uses the default_left/right_offsets, change this values to change the starting 3 legs position
         if self.action == -2:
-            print("\n\n\n-2")
             self.action = -3
             for i in range(4):
                 (def_x, def_y, def_z) = Settings.default_with_offset[i]
@@ -94,17 +92,19 @@ class Stable_3_legs(Mode):
 
         # if robot is in stable_3_legs_mode
         if self.action == 0:
-            print("plan")
+            print("action0")
             return
 
         # start of fist bump mode - move leg into default position
         if self.action == 1:
+            print("action1")
             self.num_of_substeps = 32
             self.action = 2
             self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
         # fist bump step 2 - move give fist forward
         elif self.action == 2:
+            print("action2")
             self.action = 3
             if self.leg_in_air == 1:
                 self.fist_bump_offsets[1] = (0, 0, self.fist_bump_len)
@@ -113,16 +113,21 @@ class Stable_3_legs(Mode):
 
         # fist bump step 3 - fist bump delay, no need to update step_offsets, just waits self.fist_bump_delay * self.substep_delay time
         elif self.action == 3:
+            print("action3")
             self.action = 4
             self.num_of_substeps = self.fist_bump_delay
 
         # final fist bump step - move back to starting position
         elif self.action == 4:
-            self.action = 0
+            print("action4")
+            self.action = 5
             self.num_of_substeps = 32
             self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
-        print("Settings.default_with_offset: {}".format(Settings.default_with_offset))
+        elif self.action == 5:
+            self.action = 0
+            return
+
         for i in range(4):
             (def_x, def_y, def_z) = Settings.default_with_offset[i]
             (fist_x, fist_y, fist_z) = self.fist_bump_offsets[i]
@@ -130,11 +135,8 @@ class Stable_3_legs(Mode):
                 (offset_x, offset_y, offset_z) = self.default_right_offset[i]
             else:
                 (offset_x, offset_y, offset_z) = self.default_left_offset[i]
-            print("Settings.default_with_offset[i]: {}".format((def_x, def_y, def_z)))
-            print("self.fist_bump_offsets[i]: {}".format((fist_x, fist_y, fist_z)))
-            print("self.default_right_offset[i]: {}".format((offset_x, offset_y, offset_z)))
+
             self.end_points[i] = (def_x + offset_x + fist_x, def_y + offset_y + fist_y, def_z + offset_z + fist_z)
-        print("end_points: {}".format(self.end_points))
 
 
     # Overwrite regular calculate_points when in leg in air mode, when in fist bump, use regular.
