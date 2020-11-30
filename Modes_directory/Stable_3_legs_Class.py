@@ -9,11 +9,11 @@ from Modes_directory.Mode_Class import Mode
 #  In this mode the robot uses the imu sensor to keep its self standing level while one leg is in the air.
 #  This leg is always on the front, and can be switched between left and right.
 #  To go into this mode: press TRIANGLE on the controller when in stand mode (Mode)
-#  Controls: DPad Up - Move leg in the air up
-#            DPad Down - Move leg in the air down
+#  Controls: Left Stick Up - Move leg in the air up
+#            Left Stick Down - Move leg in the air down
 #            DPad Left - switch the leg in the air to the front left leg. If front left is already in the air, reset it to default position
 #            DPad Right - switch the leg in the air to the front right leg. If front right is already in the air, reset it to default position
-#            Left stick - move the leg in the air in the corresponding direction
+#            Right Stick - move the leg in the air in the corresponding direction
 #            L1 - Feast bump with the leg that's in the air
 class Stable_3_legs(Mode):
 
@@ -34,14 +34,14 @@ class Stable_3_legs(Mode):
 
 
         self.default_right_offset = [(40,0,10), (0,50,0), (-15,0,10), (0,10,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
-        self.default_left_offset = [(0,30,0), (10,0,10), (0,10,0), (-10,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
+        self.default_left_offset = [(0,50,0), (40,0,10), (0,10,0), (-15,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
 
         # This variable is used to determine the action of the robot in this mode.
         # -1 and below - move robot to starting 3 legs position, starts at -1 and continues going down
         # 0 - robot is in stable_3_legs_mode, and the user can control its leg
         # 1 and above - robot is in fist bump mode, each step inside the fist bump mode is a new value
         self.action = -1
-        self.fist_bump_len = 35  # how far to extend fist bump, in millimeters
+        self.fist_bump_len = 40  # how far to extend fist bump, in millimeters
         self.fist_bump_delay = 5  # how long to delay retracting the arm, actual delay = self.fist_bump_delay * self.substep_delay
         # used for making the fist bump happen, its values are updated in plan_movement
         self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
@@ -98,7 +98,7 @@ class Stable_3_legs(Mode):
         # start of fist bump mode - move leg into default position
         if self.action == 1:
             print("action1")
-            self.num_of_substeps = 32
+            self.num_of_substeps = 12
             self.action = 2
             self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
@@ -121,7 +121,7 @@ class Stable_3_legs(Mode):
         elif self.action == 4:
             print("action4")
             self.action = 5
-            self.num_of_substeps = 32
+            self.num_of_substeps = 12
             self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
         elif self.action == 5:
@@ -157,6 +157,9 @@ class Stable_3_legs(Mode):
     def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
         if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
             self.action = 1  # go into fist bump mode
+            self.leg_height = 0
+            self.leg_offset_x = 0
+            self.leg_offset_z = 0
             self.is_finished_step = True  # start immediately the fist bump
             self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
              
@@ -178,27 +181,28 @@ class Stable_3_legs(Mode):
                 self.leg_offset_z = 0
                 self.leg_in_air = 0
                 self.action = -1  # Move robot back to starting 3 legs position
-            elif 'dup' in buttons_pressed and self.leg_height < self.max_leg_height:
+
+            if left_cy > 0 and self.leg_height < self.max_leg_height:
                 self.leg_height += 1
-            elif 'ddown' in buttons_pressed and self.leg_height > -self.max_leg_height:
+            if left_cy < 0 and self.leg_height > -self.max_leg_height:
                 self.leg_height -= 1
 
             # Control movement in z direction
-            if left_cy > 0 and self.leg_offset_z < self.max_offset:
+            if right_cy > 0 and self.leg_offset_z < self.max_offset:
                 self.leg_offset_z += 1
-            if left_cy < 0 and self.leg_offset_z > -self.max_offset:
+            if right_cy < 0 and self.leg_offset_z > -self.max_offset:
                 self.leg_offset_z -= 1
 
             # Control movement in the x direction. Positive x is towards the inside of the robot, so we must take leg_in_air into consideration
             if self.leg_in_air == 0:
-                if left_cx > 0 and self.leg_offset_x < self.max_offset:
+                if right_cx > 0 and self.leg_offset_x < self.max_offset:
                     self.leg_offset_x += 1
-                if left_cx < 0 and self.leg_offset_x > -self.max_offset:
+                if right_cx < 0 and self.leg_offset_x > -self.max_offset:
                     self.leg_offset_x -= 1
             else:
-                if left_cx > 0 and self.leg_offset_x > -self.max_offset:
+                if right_cx > 0 and self.leg_offset_x > -self.max_offset:
                     self.leg_offset_x -= 1
-                if left_cx < 0 and self.leg_offset_x < self.max_offset:
+                if right_cx < 0 and self.leg_offset_x < self.max_offset:
                     self.leg_offset_x += 1
 
            
