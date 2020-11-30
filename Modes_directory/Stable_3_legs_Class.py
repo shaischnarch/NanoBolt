@@ -41,8 +41,8 @@ class Stable_3_legs(Mode):
         # 0 - robot is in stable_3_legs_mode, and the user can control its leg
         # 1 and above - robot is in fist bump mode, each step inside the fist bump mode is a new value
         self.action = -1
-        self.fist_bump_len = 40  # how far to extend fist bump, in millimeters
-        self.fist_bump_delay = 5  # how long to delay retracting the arm, actual delay = self.fist_bump_delay * self.substep_delay
+        
+        self.fist_bump_delay = 8  # how long to delay retracting the arm, actual delay = self.fist_bump_delay * self.substep_delay
         # used for making the fist bump happen, its values are updated in plan_movement
         self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
@@ -98,18 +98,20 @@ class Stable_3_legs(Mode):
         # start of fist bump mode - move leg into default position
         if self.action == 1:
             print("action1")
-            self.num_of_substeps = 12
+            self.num_of_substeps = 8  # how fast the fist bump is going to be
             self.action = 2
             self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
         # fist bump step 2 - move give fist forward
         elif self.action == 2:
+            fist_bump_len = 70  # how far to extend fist bump, in millimeters
+            fist_bump_height = 15  # how far to raise the fist bump
             print("action2")
             self.action = 3
             if self.leg_in_air == 1:
-                self.fist_bump_offsets[1] = (0, 0, self.fist_bump_len)
+                self.fist_bump_offsets[1] = (0, fist_bump_height, fist_bump_len)
             else:
-                self.fist_bump_offsets[0] = (0, 0, self.fist_bump_len)
+                self.fist_bump_offsets[0] = (0, fist_bump_height, fist_bump_len)
 
         # fist bump step 3 - fist bump delay, no need to update step_offsets, just waits self.fist_bump_delay * self.substep_delay time
         elif self.action == 3:
