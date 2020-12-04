@@ -44,7 +44,7 @@ class Mode:
     # @Resets: is_finished_step = false, current_substep = 0
     # @Returns nothing
     def calculate_points(self):
-        for leg_num in range(4):
+        for leg_num in range(4):  # todo: change self.current_legs_location to the end of points (the ideal location of the start of the step), and make sure it works
             self.points[leg_num] = calculate_points(self.current_legs_location[leg_num], self.end_points[leg_num], self.heights[leg_num],
                                                     self.num_of_substeps)
         # self.current_substep = 0
@@ -79,8 +79,8 @@ class Mode:
             try:
                 (theta1, theta2, theta3) = legIK(x, y, z)
                 self.angles_servo[leg_num] = servo_angles([(theta1, theta2, theta3)], leg_num)
-                self.current_legs_location[leg_num] = (x, y, z)
-                #self.current_legs_location[leg_num] = (point_x, point_y, point_z)  # note, this change was made to minimize jerk movements
+                # self.current_legs_location[leg_num] = (x, y, z)
+                self.current_legs_location[leg_num] = (point_x, point_y, point_z)  # note, this change was made to minimize jerk movements
             except:
                 print('ERROR: Tried to move to impossible position')
                 self.stop_movement = True
