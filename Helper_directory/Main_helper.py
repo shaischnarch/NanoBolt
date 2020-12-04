@@ -2,6 +2,7 @@ from Excution.All_executions import *
 from Calculations.All_calculations import legIK, servo_angles , calculate_movement
 from Helper_directory import Settings
 import math
+import time
 
 ## function used to set robot to the zero position
 def zero_position():

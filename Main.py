@@ -76,11 +76,11 @@ while True:
 					################### switch modes #############################################
 					# current_mode.change_mode todo: figure out where to put change_mode, either here or in Mode_Class
 					if 'r2' in buttons_pressed:
-						current_mode = Mode_Class.Mode(current_leg_locations)
+						current_mode = Mode_Class.Mode(current_mode.current_leg_locations)
 					elif 'cross' in buttons_pressed:
-						current_mode = Stable_4_legs_Class.Stable_4_legs(current_leg_locations)
+						current_mode = Stable_4_legs_Class.Stable_4_legs(current_mode.current_leg_locations)
 					elif 'triangle' in buttons_pressed:
-						current_mode = Stable_3_legs_Class.Stable_3_legs(current_leg_locations)
+						current_mode = Stable_3_legs_Class.Stable_3_legs(current_mode.current_leg_locations)
 					#___________
 					#___________
 					#___________
