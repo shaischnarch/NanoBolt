@@ -9,6 +9,8 @@ from Modes_directory.Mode_Class import Mode
 #  In this mode the robot uses the imu sensor to keep its self standing level while one leg is in the air.
 #  This leg is always on the front, and can be switched between left and right.
 #  To go into this mode: press TRIANGLE on the controller when in stand mode (Mode)
+# todo: change control scheme
+#
 #  Controls: Left Stick Up - Move leg in the air up
 #            Left Stick Down - Move leg in the air down
 #            DPad Left - switch the leg in the air to the front left leg. If front left is already in the air, reset it to default position
@@ -213,7 +215,7 @@ class Stable_3_legs(Mode):
 
 
     # for now use the version form Mode. todo: write a version to take the sensor into consideration
-    # def next_substep(self, sensor):
+    # def prep_substep(self, sensor):
     #     pass
 
 

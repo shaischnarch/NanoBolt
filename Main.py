@@ -88,7 +88,7 @@ while True:
 
 
 					# movement has been stopped, in order to restore must reset to standing position using the 'options' button
-					if current_mode.stop_movement == True:
+					if current_mode.stop_movement == True:  # todo: change stop_movement to actually stop the robot
 						sleep(current_mode.substep_delay)
 						continue
 
@@ -132,7 +132,6 @@ while True:
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')
 		sleep(0.5)  # temp
-		print("Euler angle: {}".format(sensor.euler))
 
 
 
