@@ -49,11 +49,11 @@ servo_setup()  # starts i2c communication with servos
 #two_leg_counter = 0
 
 
-current_leg_locations = zero_position()
+current_legs_location = zero_position()
 sleep(1)  # gives enough time to get to zero position
 
 ###
-current_mode = Mode_Class.Mode(current_leg_locations)
+current_mode = Mode_Class.Mode(current_legs_location)
 
 ## here starts communication with ps4 controller
 while True:
@@ -76,11 +76,11 @@ while True:
 					################### switch modes #############################################
 					# current_mode.change_mode todo: figure out where to put change_mode, either here or in Mode_Class
 					if 'r2' in buttons_pressed:
-						current_mode = Mode_Class.Mode(current_mode.current_leg_locations)
+						current_mode = Mode_Class.Mode(current_mode.current_legs_location)
 					elif 'cross' in buttons_pressed:
-						current_mode = Stable_4_legs_Class.Stable_4_legs(current_mode.current_leg_locations)
+						current_mode = Stable_4_legs_Class.Stable_4_legs(current_mode.current_legs_location)
 					elif 'triangle' in buttons_pressed:
-						current_mode = Stable_3_legs_Class.Stable_3_legs(current_mode.current_leg_locations)
+						current_mode = Stable_3_legs_Class.Stable_3_legs(current_mode.current_legs_location)
 					#___________
 					#___________
 					#___________
@@ -116,7 +116,7 @@ while True:
 					current_mode.prep_substep(sensor)
 					for leg_num in range(4):
 						execute_movement(leg_num, current_mode.angles_servo[leg_num][0])
-						# current_leg_locations[leg_num] = points[leg_num][current_substep_num]
+						# current_legs_location[leg_num] = points[leg_num][current_substep_num]
 					current_mode.update_substep()
 
 
@@ -127,8 +127,8 @@ while True:
 
 	except IOError:
 		## set the robot to the starting zero position
-		current_leg_locations = zero_position()
-		#current_mode = Stable_4_legs(current_leg_locations)
+		current_legs_location = zero_position()
+		#current_mode = Stable_4_legs(current_legs_location)
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')
 		sleep(0.5)  # temp

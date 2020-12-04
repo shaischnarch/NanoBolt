@@ -79,8 +79,8 @@ class Mode:
             try:
                 (theta1, theta2, theta3) = legIK(x, y, z)
                 self.angles_servo[leg_num] = servo_angles([(theta1, theta2, theta3)], leg_num)
-                # self.current_legs_location[leg_num] = (x, y, z)
-                self.current_legs_location[leg_num] = (point_x, point_y, point_z)  # note, this change was made to minimize jerk movements
+                self.current_legs_location[leg_num] = (x, y, z)
+                #self.current_legs_location[leg_num] = (point_x, point_y, point_z)  # note, this change was made to minimize jerk movements
             except:
                 print('ERROR: Tried to move to impossible position')
                 self.stop_movement = True
