@@ -51,7 +51,9 @@ def move_to_stand(current_legs_location):
         diff_x = math.fabs(temp_x - curr_x)
         if (diff_x > max_dist):
             max_dist = diff_x
+        y_dist_multiplier = 3
         diff_y = math.fabs(temp_y - curr_y)
+        diff_y = diff_y * y_dist_multiplier
         if (diff_y > max_dist):
             max_dist = diff_y
         diff_z = math.fabs(temp_z - curr_z)
@@ -72,6 +74,7 @@ def move_to_stand(current_legs_location):
     for current_substep_num in range(num_of_substeps+1):
         for leg_num in range(4):
             execute_movement(leg_num, all_angles[leg_num][current_substep_num])
+        time.sleep(Settings.max_delay)
 
 
     return default_with_offset
