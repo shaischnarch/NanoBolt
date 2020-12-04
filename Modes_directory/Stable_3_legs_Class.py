@@ -172,14 +172,14 @@ class Stable_3_legs(Mode):
         # allow controller input only when not in fist bump mode
         if self.action == 0:
             if 'dright' in buttons_pressed:
-                move_to_stand(current_legs_location)
+                move_to_stand(self.current_legs_location)
                 self.leg_height = 0
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
                 self.leg_in_air = 1
                 self.action = -1  # Move robot back to starting 3 legs position
             elif 'dleft' in buttons_pressed:
-                move_to_stand(current_legs_location)
+                move_to_stand(self.current_legs_location)
                 self.leg_height = 0
                 self.leg_offset_x = 0
                 self.leg_offset_z = 0
