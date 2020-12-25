@@ -4,12 +4,12 @@
 granularity = 5
 
 
-## max substep delay
+## max substep delay in seconds
 max_delay = 0.05
 
 
 
-## min substep delay
+## min substep delay in seconds
 min_delay = 0.0075
 
 
@@ -26,22 +26,54 @@ height_power = 0.5
 height_normalization = 0.25**(-height_power)
 
 
+
 ## default values zero position
-default_x = -25
-default_y = -130
-default_z = 0
+__default_x = -25
+__default_y = -130
+__default_z = 0
 
 
-legs_offset = [(-20,-12,10),(5,-8,10),(2,-10,-23),(2,-12,-8)]  # the offset for each leg relative to regular step (legs 0,1,2,3)
+__legs_offset = [(-20,-12,10),(5,-8,10),(2,-10,-23),(2,-12,-8)]  # the offset for each leg relative to regular step (legs 0,1,2,3)
 #legs_offset = [(0,0,0),(0,0,0),(0,-15,-35),(0,-15,-35)]
 
+
+## Calculates the ideal position from the standing position with an offset
+def __offset_from_stand(offset):
+    retVal = [0, 0, 0, 0]
+    for i in range(4):
+        (offset_x, offset_y, offset_z) = offset[i]
+        retVal[i] = (__default_x + offset_x, __default_y + offset_y, __default_z + offset_z)
+    return retVal
+
+
+
+## Calculates the semi-ideal position from the ideal position
+def __ideal_to_semiIdeal(ideal_pos):
+    retVal = [0, 0, 0, 0]
+    for i in range(4):
+        (ideal_x, idea_y, idea_z) = ideal_pos[i]
+        (leg_offset_x, leg_offset_y, leg_offset_z) = __legs_offset[i]
+        retVal[i] = (leg_offset_x + ideal_x, leg_offset_y + ideal_y, leg_offset_z + ideal_z)
+    return retVal
+
+
+
+
+
 #the default values combined with the offset for each leg
-default_with_offset = [0,0,0,0]
-for i in range(4):
-    (offset1, offset2, offset3) = legs_offset[i]
-    default_with_offset[i] = (default_x + offset1, default_y + offset2, default_z + offset3)
+__stand_leg_position = (__default_x,__default_y, __default_z)
+semi_ideal_stand_pos = __ideal_to_semiIdeal([__stand_leg_position, __stand_leg_position, __stand_leg_position, __stand_leg_position])
 
 
+
+## Stable 3 legs:
+__stable_3_legs_right_offset = [(40,0,10), (0,50,0), (-15,0,10), (0,10,0)]  # offset from stand
+__ideal_stable_3_legs_right = __offset_from_stand(__stable_3_legs_right_offset)  # ideal default position
+stable_3_legs_right_default = __ideal_to_semiIdeal(__ideal_stable_3_legs_right)  # semi-ideal default position
+
+__stable_3_legs_left_offset = [(0,50,0), (40,0,10), (0,10,0), (-15,0,10)]  # offset from stand
+__ideal_stable_3_legs_left = __offset_from_stand(__stable_3_legs_left_offset)  # ideal default position
+stable_3_legs_left_default = __ideal_to_semiIdeal(__ideal_stable_3_legs_left)  # semi-ideal default position
 
 
 ## max absolute value of leg X value
@@ -55,3 +87,5 @@ min_Y = -25
 
 ## max absolute value of leg Y value
 max_Y = -170
+
+

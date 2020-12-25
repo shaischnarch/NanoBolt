@@ -1,4 +1,5 @@
 from Helper_directory import Settings
+from Helper_directory.Main_helper import move_to_stand
 from Calculations.All_calculations import calculate_points, servo_angles, legIK
 import numpy as np
 import math
@@ -28,6 +29,7 @@ class Stable_4_legs(Mode):
     # todo: make transition back to standing_height = 0 smoother (robot has hard time, especially when he needs to get up)
     def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
         if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
+            self.semi_ideal_current_pos, self.current_legs_location = move_to_stand(self.current_legs_location)
             self.standing_height = 0
             return
         if left_cy > 0 and self.standing_height > -self.max_standing_height:
@@ -36,21 +38,18 @@ class Stable_4_legs(Mode):
             self.standing_height += 1
 
 
-    # Overwrite update_substep to do nothing
-    def update_substep(self):
-        return
+
 
 
     def prep_substep(self, sensor):
-        self.Stable_4_legs_sensor_helper(sensor)
-        
+        self.__Stable_4_legs_sensor_helper(sensor)
         for i in range(4):
-            (offsetX, offsetY, offsetZ) = Settings.legs_offset[i]
             (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[i]
+            (stand_x, stand_y, stand_z) = self.semi_ideal_current_pos
+            x = stand_x + sensor_offset1
+            y = stand_y + sensor_offset2 + self.standing_height
+            z = stand_z + sensor_offset3
             try:
-                x = self.default_x + offsetX + sensor_offset1
-                y = self.default_y + offsetY + sensor_offset2 + self.standing_height
-                z = self.default_z + offsetZ + sensor_offset3
                 (theta1, theta2, theta3) = legIK(x, y, z)
                 self.angles_servo[i] = servo_angles([(theta1, theta2, theta3)], i)
                 self.current_legs_location[i] = (x, y, z)
@@ -60,7 +59,13 @@ class Stable_4_legs(Mode):
 
 
 
-    def Stable_4_legs_sensor_helper(self, sensor):
+    # Overwrite update_substep to do nothing
+    def update_substep(self):
+        return
+
+
+
+    def __Stable_4_legs_sensor_helper(self, sensor):
         (euler1, euler2, euler3) = sensor.euler
         print((euler1, euler2, euler3))
         offsetsX = [0, 0, 0, 0]

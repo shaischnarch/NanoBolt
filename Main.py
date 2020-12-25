@@ -49,7 +49,7 @@ servo_setup()  # starts i2c communication with servos
 #two_leg_counter = 0
 
 
-current_legs_location = zero_position()
+semi_ideal_current_pos, current_legs_location = zero_position()  # start the robot by moving it to the default semi-ideal standing position
 sleep(1)  # gives enough time to get to zero position
 
 ###
@@ -66,7 +66,7 @@ while True:
 				#turn led on
 				led.value = True
 				print('Controller Connected')
-				#sensor_offset = [(0,0,0), (0,0,0), (0,0,0), (0,0,0)]
+
 				# main loop
 				while (ds4.connected):
 					
@@ -116,7 +116,6 @@ while True:
 					current_mode.prep_substep(sensor)
 					for leg_num in range(4):
 						execute_movement(leg_num, current_mode.angles_servo[leg_num][0])
-						# current_legs_location[leg_num] = points[leg_num][current_substep_num]
 					current_mode.update_substep()
 
 
@@ -127,7 +126,7 @@ while True:
 
 	except IOError:
 		## set the robot to the starting zero position
-		current_legs_location = zero_position()
+		semi_ideal_current_pos, current_legs_location = zero_position()  # start the robot by moving it to the default semi-ideal standing position
 		#current_mode = Stable_4_legs(current_legs_location)
 		# No DS4 controller found, wait for a bit and try again
 		print('Waiting for a DS4 controller connection')
