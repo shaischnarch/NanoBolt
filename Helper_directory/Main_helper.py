@@ -97,8 +97,8 @@ def remove_offset(current_legs_location, offset):
     # calculates the substeps (semi-ideal) for the step from current_legs_location to target_position
     target_position = []
     for leg_num in range(4):
-        (offset_x, offset_y, offset_z) = offset[i]
-        (curr_x, curr_y, curr_z) = current_legs_location[i]
+        (offset_x, offset_y, offset_z) = offset[leg_num]
+        (curr_x, curr_y, curr_z) = current_legs_location[leg_num]
         (target_x, target_y, target_z) = (curr_x - offset_x, curr_y - offset_y, curr_z - offset_z)
         target_position.append((target_x, target_y, target_z))
         angles_rad[leg_num] = calculate_movement(current_legs_location[leg_num], (target_x, target_y, target_z), 0, num_of_substeps)
