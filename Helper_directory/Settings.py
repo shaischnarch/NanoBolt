@@ -51,7 +51,7 @@ def __offset_from_stand(offset):
 def __ideal_to_semiIdeal(ideal_pos):
     retVal = [0, 0, 0, 0]
     for i in range(4):
-        (ideal_x, idea_y, idea_z) = ideal_pos[i]
+        (ideal_x, ideal_y, ideal_z) = ideal_pos[i]
         (leg_offset_x, leg_offset_y, leg_offset_z) = __legs_offset[i]
         retVal[i] = (leg_offset_x + ideal_x, leg_offset_y + ideal_y, leg_offset_z + ideal_z)
     return retVal

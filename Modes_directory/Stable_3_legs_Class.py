@@ -41,6 +41,7 @@ class Stable_3_legs(Mode):
         self.fist_bump_delay = 8  # how long to delay retracting the arm, actual delay = self.fist_bump_delay * self.substep_delay
         # used for making the fist bump happen, its values are updated in plan_movement
         self.fist_bump = (0, 0, 0)
+        print("finished 3-legs constructor")
 
         # self.num_of_substeps = 1
         # self.sensor_act = 1
@@ -51,18 +52,20 @@ class Stable_3_legs(Mode):
         # move robot to stable 3_legs_mode:
         # first step: Raise robot and lean, this step is needed because the robot has a hard time getting up with 2 legs.
         if self.action == -1:
+            print("action -1")
             self.num_of_substeps = 32
             self.action = -2
             #  set all legs to their final target position, but let all the legs help lift
             for i in range(4):
                 if self.leg_in_air == 1:
                     (x, y, z) = Settings.stable_3_legs_right_default[i]
+                    print((x, y, z))
                     if i == 1 or i == 3:
-                        y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
+                        y = y - 5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
                 else:
                     (x, y, z) = Settings.stable_3_legs_left_default[i]
                     if i == 0 or i == 2:
-                        y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
+                        y = y - 5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
                 self.end_points[i] = (x, y, z)
             return
 
@@ -71,6 +74,7 @@ class Stable_3_legs(Mode):
         # uses the default_left/right_offsets, change this values to change the starting 3 legs position
         if self.action == -2:
             self.action = -3
+            print("action -2")
             for i in range(4):
                 if self.leg_in_air == 1:
                     (x, y, z) = Settings.stable_3_legs_right_default[i]
@@ -82,6 +86,7 @@ class Stable_3_legs(Mode):
 
         # lastly, let the last step finish, than switch to action = 0
         if self.action == -3:
+            print("action -3")
             self.action = 0
             return
 
@@ -133,8 +138,8 @@ class Stable_3_legs(Mode):
     def calculate_points(self):
         if self.action == 0:
             for i in range(4):
-                self.points[i][0] = self.semi_ideal_current_pos
-            self.num_of_substeps = 0
+                self.points[i][0] = self.semi_ideal_current_pos[i]
+            self.num_of_substeps = 1
             self.current_substep = 0
         else:
             Mode.calculate_points(self)

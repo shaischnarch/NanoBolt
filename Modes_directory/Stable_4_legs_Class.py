@@ -45,7 +45,7 @@ class Stable_4_legs(Mode):
         self.__Stable_4_legs_sensor_helper(sensor)
         for i in range(4):
             (sensor_offset1, sensor_offset2, sensor_offset3) = self.sensor_offset[i]
-            (stand_x, stand_y, stand_z) = self.semi_ideal_current_pos
+            (stand_x, stand_y, stand_z) = self.semi_ideal_current_pos[i]
             x = stand_x + sensor_offset1
             y = stand_y + sensor_offset2 + self.standing_height
             z = stand_z + sensor_offset3
