@@ -65,7 +65,7 @@ class Mode:
     # When this method is called, the location of the next semi-ideal substep is already available in self.points[leg_num][self.current_substep]
     # Therefore this method uses the sensor to make realtime minor changes to the next substep - transfer to physical/dynamic realm
     # It than calculates the actual values for the servos to execute the next substep
-    # @updates: current_legs_location with the real time location
+    # @updates: current_legs_location with the real time location, and semi_ideal_current_pos with the semi ideal position
     # todo: might be a cause of error, debug later
     def prep_substep(self, sensor):
         self.__sum_offsets()

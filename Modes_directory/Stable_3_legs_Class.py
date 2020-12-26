@@ -1,5 +1,5 @@
 from Helper_directory import Settings
-from Helper_directory.Main_helper import move_to_stand
+from Helper_directory.Main_helper import move_to_stand, move_to_position
 from Calculations.All_calculations import calculate_points, servo_angles, legIK
 import numpy as np
 import math
@@ -31,12 +31,6 @@ class Stable_3_legs(Mode):
         self.leg_offset_x = 0  # positive is inside (take which leg is in the air into consideration)
         self.leg_offset_z = 0  # positive is forward
         self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]  # leg movement as set by the controller
-        for i in range(4):
-            self.points[i] = [(Settings.default_x, Settings.default_y, Settings.default_z)]
-
-
-        self.default_right_offset = [(40,0,10), (0,50,0), (-15,0,10), (0,10,0)]  # The offset from default position to stand on 3 legs when right leg is in the air
-        self.default_left_offset = [(0,50,0), (40,0,10), (0,10,0), (-15,0,10)]  # The offset from default position to stand on 3 legs when left leg is in the air
 
         # This variable is used to determine the action of the robot in this mode.
         # -1 and below - move robot to starting 3 legs position, starts at -1 and continues going down
@@ -46,7 +40,7 @@ class Stable_3_legs(Mode):
         
         self.fist_bump_delay = 8  # how long to delay retracting the arm, actual delay = self.fist_bump_delay * self.substep_delay
         # used for making the fist bump happen, its values are updated in plan_movement
-        self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+        self.fist_bump = (0, 0, 0)
 
         # self.num_of_substeps = 1
         # self.sensor_act = 1
@@ -59,33 +53,32 @@ class Stable_3_legs(Mode):
         if self.action == -1:
             self.num_of_substeps = 32
             self.action = -2
-
             #  set all legs to their final target position, but let all the legs help lift
             for i in range(4):
-                (def_x, def_y, def_z) = Settings.default_with_offset[i]
                 if self.leg_in_air == 1:
-                    (offset_x, offset_y, offset_z) = self.default_right_offset[i]
+                    (x, y, z) = Settings.stable_3_legs_right_default[i]
                     if i == 1 or i == 3:
-                        offset_y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
+                        y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
                 else:
-                    (offset_x, offset_y, offset_z) = self.default_left_offset[i]
+                    (x, y, z) = Settings.stable_3_legs_left_default[i]
                     if i == 0 or i == 2:
-                        offset_y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
-                self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
+                        y = -5  # raise the robot using all legs: these two legs drop for the final position, so here we raise them to help lift
+                self.end_points[i] = (x, y, z)
             return
+
 
         # second step: lift leg in the air
         # uses the default_left/right_offsets, change this values to change the starting 3 legs position
         if self.action == -2:
             self.action = -3
             for i in range(4):
-                (def_x, def_y, def_z) = Settings.default_with_offset[i]
                 if self.leg_in_air == 1:
-                    (offset_x, offset_y, offset_z) = self.default_right_offset[i]
+                    (x, y, z) = Settings.stable_3_legs_right_default[i]
                 else:
-                    (offset_x, offset_y, offset_z) = self.default_left_offset[i]
-                self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
+                    (x, y, z) = Settings.stable_3_legs_left_default[i]
+                self.end_points[i] = (x, y, z)
             return
+
 
         # lastly, let the last step finish, than switch to action = 0
         if self.action == -3:
@@ -97,50 +90,42 @@ class Stable_3_legs(Mode):
             print("action0")
             return
 
-        # start of fist bump mode - move leg into default position
-        if self.action == 1:
-            print("action1")
-            self.num_of_substeps = 8  # how fast the fist bump is going to be
-            self.action = 2
-            self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
-        # fist bump step 2 - move give fist forward
-        elif self.action == 2:
+        # fist bump step 1 - move give fist forward
+        elif self.action == 1:
             fist_bump_len = 70  # how far to extend fist bump, in millimeters
             fist_bump_height = 15  # how far to raise the fist bump
+            print("action1")
+            self.action = 2
+            self.fist_bump = (0, fist_bump_height, fist_bump_len)
+
+        # fist bump step 2 - fist bump delay, no need to update step_offsets, just waits self.fist_bump_delay * self.substep_delay time
+        elif self.action == 2:
             print("action2")
             self.action = 3
-            if self.leg_in_air == 1:
-                self.fist_bump_offsets[1] = (0, fist_bump_height, fist_bump_len)
-            else:
-                self.fist_bump_offsets[0] = (0, fist_bump_height, fist_bump_len)
-
-        # fist bump step 3 - fist bump delay, no need to update step_offsets, just waits self.fist_bump_delay * self.substep_delay time
-        elif self.action == 3:
-            print("action3")
-            self.action = 4
             self.num_of_substeps = self.fist_bump_delay
 
         # final fist bump step - move back to starting position
-        elif self.action == 4:
-            print("action4")
-            self.action = 5
+        elif self.action == 3:
+            print("action3")
+            self.action = 4
             self.num_of_substeps = 12
-            self.fist_bump_offsets = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+            self.fist_bump = (0,0,0)
 
-        elif self.action == 5:
+        elif self.action == 4:
             self.action = 0
             return
 
-        for i in range(4):
-            (def_x, def_y, def_z) = Settings.default_with_offset[i]
-            (fist_x, fist_y, fist_z) = self.fist_bump_offsets[i]
-            if self.leg_in_air == 1:
-                (offset_x, offset_y, offset_z) = self.default_right_offset[i]
-            else:
-                (offset_x, offset_y, offset_z) = self.default_left_offset[i]
+        # update end points location with fist bump additions
+        if self.leg_in_air == 1:
+            self.end_points = Settings.stable_3_legs_right_default
+        else:
+            self.end_points = Settings.stable_3_legs_left_default
 
-            self.end_points[i] = (def_x + offset_x + fist_x, def_y + offset_y + fist_y, def_z + offset_z + fist_z)
+        (fist_x, fist_y, fist_z) = self.fist_bump
+        (x, y, z) = self.end_points[self.leg_in_air]
+        self.end_points[self.leg_in_air] = (x + fist_x, y + fist_y, z + fist_z)
+
 
 
     # Overwrite regular calculate_points when in leg in air mode, when in fist bump, use regular.
@@ -148,7 +133,7 @@ class Stable_3_legs(Mode):
     def calculate_points(self):
         if self.action == 0:
             for i in range(4):
-                self.points[i][0] = self.points[i][self.num_of_substeps]
+                self.points[i][0] = self.semi_ideal_current_pos
             self.num_of_substeps = 0
             self.current_substep = 0
         else:
@@ -161,56 +146,66 @@ class Stable_3_legs(Mode):
     def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
         if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
             self.action = 1  # go into fist bump mode
-            self.leg_height = 0
-            self.leg_offset_x = 0
-            self.leg_offset_z = 0
             self.is_finished_step = True  # start immediately the fist bump
             self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
-             
+            # move robot back to default position
+            if self.leg_in_air == 1:
+                self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_right_default, self.current_legs_location)
+            else:
+                self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_left_default, self.current_legs_location)
             return
 
         # allow controller input only when not in fist bump mode
         if self.action == 0:
+            (offset_x, offset_y, offset_z) = self.controller_offset[self.leg_in_air]
             if 'dright' in buttons_pressed:
-                move_to_stand(self.current_legs_location)
-                self.leg_height = 0
-                self.leg_offset_x = 0
-                self.leg_offset_z = 0
+                if self.leg_in_air == 1:
+                    self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_right_default, self.current_legs_location)
+                else:
+                    self.semi_ideal_current_pos, self.current_legs_location = move_to_stand(self.current_legs_location)
+                    self.action = -1  # Move robot back to starting 3 legs position
+                offset_x = 0
+                offset_y = 0
+                offset_z = 0
                 self.leg_in_air = 1
-                self.action = -1  # Move robot back to starting 3 legs position
-            elif 'dleft' in buttons_pressed:
-                move_to_stand(self.current_legs_location)
-                self.leg_height = 0
-                self.leg_offset_x = 0
-                self.leg_offset_z = 0
-                self.leg_in_air = 0
-                self.action = -1  # Move robot back to starting 3 legs position
 
-            if left_cy > 0 and self.leg_height < self.max_leg_height:
-                self.leg_height += 1
-            if left_cy < 0 and self.leg_height > -self.max_leg_height:
-                self.leg_height -= 1
+            elif 'dleft' in buttons_pressed:
+                if self.leg_in_air == 0:
+                    self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_left_default, self.current_legs_location)
+                else:
+                    self.semi_ideal_current_pos, self.current_legs_location = move_to_stand(self.current_legs_location)
+                    self.action = -1  # Move robot back to starting 3 legs position
+                offset_x = 0
+                offset_y = 0
+                offset_z = 0
+                self.leg_in_air = 0
+
+            if left_cy > 0 and offset_y < self.max_leg_height:
+                offset_y += 1
+            if left_cy < 0 and offset_y > -self.max_leg_height:
+                offset_y -= 1
 
             # Control movement in z direction
-            if right_cy > 0 and self.leg_offset_z < self.max_offset:
-                self.leg_offset_z += 1
-            if right_cy < 0 and self.leg_offset_z > -self.max_offset:
-                self.leg_offset_z -= 1
+            if right_cy > 0 and offset_z < self.max_offset:
+                offset_z += 1
+            if right_cy < 0 and offset_z > -self.max_offset:
+                offset_z -= 1
 
             # Control movement in the x direction. Positive x is towards the inside of the robot, so we must take leg_in_air into consideration
             if self.leg_in_air == 0:
-                if right_cx > 0 and self.leg_offset_x < self.max_offset:
-                    self.leg_offset_x += 1
-                if right_cx < 0 and self.leg_offset_x > -self.max_offset:
-                    self.leg_offset_x -= 1
+                if right_cx > 0 and offset_x < self.max_offset:
+                    offset_x += 1
+                if right_cx < 0 and offset_x > -self.max_offset:
+                    offset_x -= 1
             else:
-                if right_cx > 0 and self.leg_offset_x > -self.max_offset:
-                    self.leg_offset_x -= 1
-                if right_cx < 0 and self.leg_offset_x < self.max_offset:
-                    self.leg_offset_x += 1
+                if right_cx > 0 and offset_x > -self.max_offset:
+                    offset_x -= 1
+                if right_cx < 0 and offset_x < self.max_offset:
+                    offset_x += 1
 
            
-            self.controller_offset[self.leg_in_air] = (self.leg_offset_x, self.leg_height, self.leg_offset_z)  # leg movement as set by the controller
+            self.controller_offset[self.leg_in_air] = (offset_x, offset_y, offset_z)  # leg movement as set by the controller
+
 
 
 
