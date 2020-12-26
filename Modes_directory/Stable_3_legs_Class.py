@@ -123,9 +123,9 @@ class Stable_3_legs(Mode):
 
         # update end points location with fist bump additions
         if self.leg_in_air == 1:
-            self.end_points = Settings.stable_3_legs_right_default
+            self.end_points = Settings.stable_3_legs_right_default[:]
         else:
-            self.end_points = Settings.stable_3_legs_left_default
+            self.end_points = Settings.stable_3_legs_left_default[:]
 
         (fist_x, fist_y, fist_z) = self.fist_bump
         (x, y, z) = self.end_points[self.leg_in_air]
