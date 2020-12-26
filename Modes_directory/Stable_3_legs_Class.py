@@ -98,6 +98,7 @@ class Stable_3_legs(Mode):
 
         # fist bump step 1 - move give fist forward
         elif self.action == 1:
+            self.num_of_substeps = 12
             fist_bump_len = 70  # how far to extend fist bump, in millimeters
             fist_bump_height = 15  # how far to raise the fist bump
             print("action1")

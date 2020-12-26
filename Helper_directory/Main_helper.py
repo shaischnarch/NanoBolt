@@ -1,5 +1,5 @@
 from Excution.All_executions import *
-from Calculations.All_calculations import legIK, servo_angles, calculate_movement
+from Calculations.All_calculations import legIK, servo_angles, calculate_movement, calculate_points
 from Helper_directory import Settings
 import math
 import time
@@ -46,7 +46,7 @@ def move_to_position(target_position, current_legs_location):
 
     # calculates the substeps (semi-ideal) for the step from current_legs_location to target_position
     for leg_num in range(4):
-        (target_x, target_y, target_z) = target_position[i]
+        (target_x, target_y, target_z) = target_position[leg_num]
         angles_rad[leg_num] = calculate_movement(current_legs_location[leg_num], (target_x, target_y, target_z), 0, num_of_substeps)
         all_angles[leg_num] = servo_angles(angles_rad[leg_num], leg_num)
 
@@ -54,7 +54,7 @@ def move_to_position(target_position, current_legs_location):
         for leg_num in range(4):
             execute_movement(leg_num, all_angles[leg_num][current_substep_num])
         time.sleep(Settings.max_delay)
-
+    print("done")
     return target_position[:], target_position[:]
 
 
