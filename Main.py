@@ -1,7 +1,7 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
 from Plan.All_Plans import *
-from Modes_directory import Mode_Class,Stable_4_legs_Class, Stable_3_legs_Class
+from Modes_directory import Mode_Class, Stable_4_legs_Class, Stable_3_legs_Class, Walking_2_legs_Class
 from Helper_directory.Main_helper import *
 from Helper_directory import Settings
 
@@ -75,12 +75,14 @@ while True:
 
 					################### switch modes #############################################
 					# current_mode.change_mode todo: figure out where to put change_mode, either here or in Mode_Class
-					if 'r2' in buttons_pressed:
+					if 'r2' in buttons_pressed:  # options button on ps4 controller
 						current_mode = Mode_Class.Mode(current_mode.current_legs_location)
-					elif 'cross' in buttons_pressed:
+					elif 'cross' in buttons_pressed:  # square button on ps4 controller
 						current_mode = Stable_4_legs_Class.Stable_4_legs(current_mode.current_legs_location)
-					elif 'triangle' in buttons_pressed:
+					elif 'triangle' in buttons_pressed:  # triangle button on ps4 controller
 						current_mode = Stable_3_legs_Class.Stable_3_legs(current_mode.current_legs_location)
+					elif 'l1' in buttons_pressed:  # L2 button on ps4 controller
+						current_mode = Walking_2_legs_Class.Walking_2_legs(current_mode.current_legs_location)
 					#___________
 					#___________
 					#___________

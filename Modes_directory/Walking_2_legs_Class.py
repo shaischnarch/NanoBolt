@@ -24,22 +24,22 @@ class Walking_2_legs(Mode):
         # when diag is 0, legs 0,2 move forward in the air, and 1,3 backwards on the ground
         self.diag = 0
 
-        self.height_jumps= 1 # change for testing
+        self.height_jumps = 1 # change for testing
         self.max_leg_height = 30  # the max height offset from the controller (in both up and down directions)
-        self.height=15 ## staring height # change for height limition
+        self.height = 15 ## staring height # change for height limition
         # the leg position controlled by the left stick
 
         # change for testing
         # define max and min number of substep:
-        self.num_of_substeps_jumps=1
-        self.max_num_of_substep=36
-        self.min_num_of_substep=4
+        self.num_of_substeps_jumps = 2
+        self.max_num_of_substep = 36
+        self.min_num_of_substep = 4
 
         # change for testing
         # define max and min substep delay:
-        self.substep_delay_jumps= 0.005
-        self.max_substep_delay= Settings.max_delay+ self.substep_delay_jumps*8
-        self.min_substep_delay= Settings.min_delay
+        self.substep_delay_jumps = 0.005
+        self.max_substep_delay = Settings.max_delay+ self.substep_delay_jumps*8
+        self.min_substep_delay = Settings.min_delay
 
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
 
@@ -100,20 +100,3 @@ class Walking_2_legs(Mode):
     # def prep_substep(self, sensor):
     #     pass
 
-    # This method preps the transition to lifting up one leg.
-    # The way it does this is by creating the first step for all the legs to reach the desired location.
-    # This methods takes into consideration the leg that needs to be lifted, and updates the endpoints accordingly
-    # Note: this method sets is_finished_step = false in order for the robot to consider this setup a step
-    # Currently, move legs as if robot is a square, might update according to results
-    # def stand_to_3_legs(self):
-    #     for i in range(4):
-    #         (def_x, def_y, def_z) = Settings.default_with_offset[i]
-    #         if self.leg_in_air == 1:
-    #             (offset_x, offset_y, offset_z) = self.default_right_offset[i]
-    #         else:
-    #             (offset_x, offset_y, offset_z) = self.default_left_offset[i]
-    #         self.end_points[i] = (def_x + offset_x, def_y + offset_y, def_z + offset_z)
-    #
-    #     self.is_finished_step = False
-    #     Mode.calculate_points(self)
-    #
