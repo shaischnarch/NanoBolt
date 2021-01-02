@@ -30,7 +30,7 @@ class Stable_3_legs(Mode):
         self.max_offset = 30
         self.leg_offset_x = 0  # positive is inside (take which leg is in the air into consideration)
         self.leg_offset_z = 0  # positive is forward
-        self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]  # leg movement as set by the controller
+        self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]  # leg movement as set by the controller todo: check if needed, might appear in mode constructor
 
         # This variable is used to determine the action of the robot in this mode.
         # -1 and below - move robot to starting 3 legs position, starts at -1 and continues going down
