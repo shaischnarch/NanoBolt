@@ -61,6 +61,8 @@ class Walking_2_legs(Mode):
     def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
 
     # change (all of that)
+        if 'r1' in buttons_pressed:
+            self.pause_movement = not self.pause_movement
         # change num of substep
         if 'dright' in buttons_pressed:
             if self.num_of_substeps<self.max_num_of_substep:
