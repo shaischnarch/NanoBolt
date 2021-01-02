@@ -24,91 +24,77 @@ class Walking_2_legs(Mode):
         # when diag is 0, legs 0,2 move forward in the air, and 1,3 backwards on the ground
         self.diag = 0
 
-
+        self.height_jumps= 1 # change for testing
         self.max_leg_height = 30  # the max height offset from the controller (in both up and down directions)
+        self.height=15 ## staring height # change for height limition
         # the leg position controlled by the left stick
 
+        # change for testing
+        # define max and min number of substep:
+        self.num_of_substeps_jumps=1
+        self.max_num_of_substep=36
+        self.min_num_of_substep=4
 
+        # change for testing
+        # define max and min substep delay:
+        self.substep_delay_jumps= 0.005
+        self.max_substep_delay= Settings.max_delay+ self.substep_delay_jumps*8
+        self.min_substep_delay= Settings.min_delay
 
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
 
         if self.diag == 0:
             self.diag = 1
             self.end_points = Settings.second_diag_default[:]
-            self.heights = [0,self.max_leg_height,0,self.max_leg_height]
+            self.heights = [0,self.height,0,self.height] # change
 
         else:
             self.diag = 0
             self.end_points = Settings.first_diag_default[:]
-            self.heights = [self.max_leg_height, 0, self.max_leg_height, 0]
+            self.heights = [self.height, 0, self.height, 0] # change
 
 
 
 
-    # Receives input from the controller.
-    # Changes leg position, leg height, and switch leg
-    # Controls are writen in Class description
+    # for now, use the controller for 3 changes: substep delay, max height, and num of substpe changes for testing.
+    # todo: implement proper usage of contreller later
     def controller_input(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
-        if 'square' in buttons_pressed:  # 'square' is actually L1 on the ps4 controller, bad controller library
-            self.action = 1  # go into fist bump mode
-            self.is_finished_step = True  # start immediately the fist bump
-            self.controller_offset = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
-            # move robot back to default position
-            if self.leg_in_air == 1:
-                self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_right_default, self.current_legs_location)
+
+    # change (all of that)
+        # change num of substep
+        if 'dright' in buttons_pressed:
+            if self.num_of_substeps<self.max_num_of_substep:
+                self.num_of_substeps += self.num_of_substeps_jumps
             else:
-                self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_left_default, self.current_legs_location)
-            return
-
-        # allow controller input only when not in fist bump mode
-        if self.action == 0:
-            (offset_x, offset_y, offset_z) = self.controller_offset[self.leg_in_air]
-            if 'dright' in buttons_pressed:
-                if self.leg_in_air == 1:
-                    self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_right_default, self.current_legs_location)
-                else:
-                    self.semi_ideal_current_pos, self.current_legs_location = move_to_stand(self.current_legs_location)
-                    self.action = -1  # Move robot back to starting 3 legs position
-                offset_x = 0
-                offset_y = 0
-                offset_z = 0
-                self.leg_in_air = 1
-
-            elif 'dleft' in buttons_pressed:
-                if self.leg_in_air == 0:
-                    self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.stable_3_legs_left_default, self.current_legs_location)
-                else:
-                    self.semi_ideal_current_pos, self.current_legs_location = move_to_stand(self.current_legs_location)
-                    self.action = -1  # Move robot back to starting 3 legs position
-                offset_x = 0
-                offset_y = 0
-                offset_z = 0
-                self.leg_in_air = 0
-
-            if left_cy > 0 and offset_y < self.max_leg_height:
-                offset_y += 1
-            if left_cy < 0 and offset_y > -self.max_leg_height:
-                offset_y -= 1
-
-            # Control movement in z direction
-            if right_cy > 0 and offset_z < self.max_offset:
-                offset_z += 1
-            if right_cy < 0 and offset_z > -self.max_offset:
-                offset_z -= 1
-
-            # Control movement in the x direction. Positive x is towards the inside of the robot, so we must take leg_in_air into consideration
-            if self.leg_in_air == 0:
-                if right_cx > 0 and offset_x < self.max_offset:
-                    offset_x += 1
-                if right_cx < 0 and offset_x > -self.max_offset:
-                    offset_x -= 1
+                print("Num of substep is already in it's max value: "+ str(self.max_num_of_substep) )
+        elif 'dleft' in buttons_pressed:
+            if self.num_of_substeps>self.min_num_of_substep:
+                self.num_of_substeps -= self.num_of_substeps_jumps
             else:
-                if right_cx > 0 and offset_x > -self.max_offset:
-                    offset_x -= 1
-                if right_cx < 0 and offset_x < self.max_offset:
-                    offset_x += 1
+                print("Num of substep is already in it's min value: " + str(self.min_num_of_substep))
 
-            self.controller_offset[self.leg_in_air] = (offset_x, offset_y, offset_z)  # leg movement as set by the controller
+        #change height, war
+        if left_cy > 0 and self.height < self.max_leg_height:
+            self.height += self.height_jumps
+        else:
+            print("Height is already in it's max value: " + str(self.max_leg_height))
+
+        if left_cy < 0 and self.height > -self.max_leg_height:
+            self.height -= self.height_jumps
+        else:
+            print("Height is already in it's min value: " + str(-self.max_leg_height))
+
+    # change substep delay , defult is max= 0.05, min according to settings is 0.0075
+        if right_cy > 0 and self.substep_delay < self.max_substep_delay:
+            self.substep_delay += self.substep_delay_jumps
+        else:
+            print("Substep delay is already in it's max value: " + str(self.max_substep_delay))
+
+        if right_cy < 0 and self.substep_delay > self.min_substep_delay:
+            self.substep_delay -= self.substep_delay_jumps
+        else:
+            print("Substep delay is already in it's min value: " + str(self.min_substep_delay))
+
 
     # for now use the version form Mode. todo: write a version to take the sensor into consideration
     # def prep_substep(self, sensor):
