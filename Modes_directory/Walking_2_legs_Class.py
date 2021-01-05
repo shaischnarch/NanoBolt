@@ -63,38 +63,45 @@ class Walking_2_legs(Mode):
     # change (all of that)
         if 'r1' in buttons_pressed:
             self.pause_movement = not self.pause_movement
+            print("paused: " + str(self.pause_movement))
         # change num of substep
         if 'dright' in buttons_pressed:
             if self.num_of_substeps<self.max_num_of_substep:
                 self.num_of_substeps += self.num_of_substeps_jumps
+                print("Updated current num of substeps to: " + str(self.num_of_substeps))
             else:
                 print("Num of substep is already in it's max value: "+ str(self.max_num_of_substep) )
         elif 'dleft' in buttons_pressed:
             if self.num_of_substeps>self.min_num_of_substep:
                 self.num_of_substeps -= self.num_of_substeps_jumps
+                print("Updated current num of substeps to: " + str(self.num_of_substeps))
             else:
                 print("Num of substep is already in it's min value: " + str(self.min_num_of_substep))
 
         #change height, war
         if left_cy > 0 and self.height < self.max_leg_height:
             self.height += self.height_jumps
-        else:
+            print("Updated step height to: " + str(self.height))
+        elif left_cy > 0:
             print("Height is already in it's max value: " + str(self.max_leg_height))
 
         if left_cy < 0 and self.height > -self.max_leg_height:
             self.height -= self.height_jumps
-        else:
+            print("Updated step height to: " + str(self.height))
+        elif left_cy < 0:
             print("Height is already in it's min value: " + str(-self.max_leg_height))
 
     # change substep delay , defult is max= 0.05, min according to settings is 0.0075
         if right_cy > 0 and self.substep_delay < self.max_substep_delay:
             self.substep_delay += self.substep_delay_jumps
-        else:
+            print("Updated substep delay to: " + str(self.substep_delay))
+        elif right_cy > 0:
             print("Substep delay is already in it's max value: " + str(self.max_substep_delay))
 
         if right_cy < 0 and self.substep_delay > self.min_substep_delay:
             self.substep_delay -= self.substep_delay_jumps
-        else:
+            print("Updated substep delay to: " + str(self.substep_delay))
+        elif right_cy < 0:
             print("Substep delay is already in it's min value: " + str(self.min_substep_delay))
 
 
