@@ -96,7 +96,7 @@ while True:
 
 					# receives updated inputs, also used to update pause_movement
 					current_mode.controller_input(left_cx, left_cy, right_cx, right_cy, buttons_pressed)
-					
+					print(sensor.euler)
 
 					# skip substep if pause_movement == True
 					if current_mode.pause_movement == True:
