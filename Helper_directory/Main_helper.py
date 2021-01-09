@@ -110,3 +110,15 @@ def remove_offset(current_legs_location, offset):
         time.sleep(Settings.max_delay)
 
     return target_position
+
+
+
+### Method used for reading the sensor values while accounting for sensor offsets
+### USE ONLY THIS METHOD IN THE CODE, DO NOT USE sensor.euler
+def read_sensor(sensor):
+    (offset_1, offset_2, offset_3) = Settings.sensor_offset
+    (euler1, euler2, euler3) = sensor.euler
+    return (euler1+offset_1, euler2+offset_2, euler3+offset_3)
+
+
+

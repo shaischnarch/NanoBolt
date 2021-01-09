@@ -1,5 +1,5 @@
 from Helper_directory import Settings
-from Helper_directory.Main_helper import move_to_stand
+from Helper_directory.Main_helper import move_to_stand, read_sensor
 from Calculations.All_calculations import calculate_points, servo_angles, legIK
 import numpy as np
 import math
@@ -66,7 +66,7 @@ class Stable_4_legs(Mode):
 
 
     def __Stable_4_legs_sensor_helper(self, sensor):
-        (euler1, euler2, euler3) = sensor.euler
+        (euler1, euler2, euler3) = read_sensor(sensor)
         print((euler1, euler2, euler3))
         offsetsX = [0, 0, 0, 0]
         offsetsY = [0, 0, 0, 0]
