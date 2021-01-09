@@ -43,17 +43,17 @@ class Walking_2_legs(Mode):
 
         ## sensors variables
         self.sensor_active = 0
-        self.num_of_substeps_sensor_checker = 1
+        self.num_of_substeps_sensor_checker = 2
         self.sensor_angle_unit = 5  # it means that every time,we add another correction units for every additional 5 degrees diffrence from wanted angle
-        self.sensor_z_axis_offset_units = 2
+        self.sensor_z_axis_offset_units = 1
         self.sensor_x_axis_offset_units = 1
-        self.sensor_y_axis_offset_units = 0
+        self.sensor_y_axis_offset_units = 1
 
         # define the wanted sensors angles and what is the maximum distance allowed from those angles
-        self.wanted_front_angle = 0
+        self.wanted_front_angle = 2
         self.front_angle_allowed_diff = 1
         self.wanted_side_angle = 0
-        self.side_angle_allowed_diff = 1
+        self.side_angle_allowed_diff = 3
 
     #OVERRIDE
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
@@ -61,8 +61,8 @@ class Walking_2_legs(Mode):
         if self.diag == 0:
             self.diag = 1
             self.end_points = Settings.second_diag_default[:]
-            self.heights = [-5, self.height, -5, self.height]
-
+            #self.heights = [0, self.height, 0, self.height]
+            self.heights = [self.height, 0, self.height, 0]     ##### TEST, MIGHT DELETE
             self.sensor_offset[1] = (0, 0, 0)  # change
             self.sensor_offset[3] = (0, 0, 0)  # change
             self.controller_offset[1] = (0, 0, 0)  # change
@@ -71,8 +71,8 @@ class Walking_2_legs(Mode):
         else:
             self.diag = 0
             self.end_points = Settings.first_diag_default[:]
-            self.heights = [self.height, -5, self.height, -5]  # change
-
+            #self.heights = [self.height, 0, self.height, 0]  # change
+            self.heights = [0, self.height, 0, self.height]     ##### TEST, MIGHT DELETE
             self.sensor_offset[0] = (0, 0, 0)  # change
             self.sensor_offset[2] = (0, 0, 0)  # change
             self.controller_offset[0] = (0, 0, 0)  # change
