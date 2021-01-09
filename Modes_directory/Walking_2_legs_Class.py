@@ -19,6 +19,7 @@ class Walking_2_legs(Mode):
 
         self.pause_movement = False
         self.is_finished_step = True
+        self.forward = True  # when true walk forward, false walk backwards
 
         # 0 means that the current step being executed is from second diag to first, 1 means the opposite
         # when diag is 0, legs 0,2 move forward in the air, and 1,3 backwards on the ground
@@ -61,22 +62,36 @@ class Walking_2_legs(Mode):
         if self.diag == 0:
             self.diag = 1
             self.end_points = Settings.second_diag_default[:]
-            #self.heights = [0, self.height, 0, self.height]
-            self.heights = [self.height, 0, self.height, 0]     ##### TEST, MIGHT DELETE
-            self.sensor_offset[1] = (0, 0, 0)  # change
-            self.sensor_offset[3] = (0, 0, 0)  # change
-            self.controller_offset[1] = (0, 0, 0)  # change
-            self.controller_offset[3] = (0, 0, 0)  # change
+            if self.forward:
+                self.heights = [0, self.height, 0, self.height]
+                self.sensor_offset[1] = (0, 0, 0)  # change
+                self.sensor_offset[3] = (0, 0, 0)  # change
+                self.controller_offset[1] = (0, 0, 0)  # change
+                self.controller_offset[3] = (0, 0, 0)  # change
+            else:
+                self.heights = [self.height, 0, self.height, 0]     ##### TEST, MIGHT DELETE
+                self.sensor_offset[0] = (0, 0, 0)  # change
+                self.sensor_offset[2] = (0, 0, 0)  # change
+                self.controller_offset[0] = (0, 0, 0)  # change
+                self.controller_offset[2] = (0, 0, 0)  # change
+
 
         else:
             self.diag = 0
             self.end_points = Settings.first_diag_default[:]
-            #self.heights = [self.height, 0, self.height, 0]  # change
-            self.heights = [0, self.height, 0, self.height]     ##### TEST, MIGHT DELETE
-            self.sensor_offset[0] = (0, 0, 0)  # change
-            self.sensor_offset[2] = (0, 0, 0)  # change
-            self.controller_offset[0] = (0, 0, 0)  # change
-            self.controller_offset[2] = (0, 0, 0)  # change
+            if self.forward:
+                self.heights = [self.height, 0, self.height, 0]  # change
+                self.sensor_offset[0] = (0, 0, 0)  # change
+                self.sensor_offset[2] = (0, 0, 0)  # change
+                self.controller_offset[0] = (0, 0, 0)  # change
+                self.controller_offset[2] = (0, 0, 0)  # change
+            else:
+                self.heights = [0, self.height, 0, self.height]     ##### TEST, MIGHT DELETE
+                self.sensor_offset[1] = (0, 0, 0)  # change
+                self.sensor_offset[3] = (0, 0, 0)  # change
+                self.controller_offset[1] = (0, 0, 0)  # change
+                self.controller_offset[3] = (0, 0, 0)  # change
+
 
 
     # @OVERRIDE - add the ability to calculate the removal of offsets for the correct legs
@@ -86,7 +101,7 @@ class Walking_2_legs(Mode):
     # @Resets: is_finished_step = false, current_substep = 0
     # @Returns nothing
     def calculate_points(self):
-        if self.diag == 1:
+        if (self.diag == 1 and self.forward) or (self.diag == 0 and not self.forward):
             self.points[0] = calculate_points(self.semi_ideal_current_pos[0], self.end_points[0], self.heights[0], self.num_of_substeps)
             self.points[2] = calculate_points(self.semi_ideal_current_pos[2], self.end_points[2], self.heights[2], self.num_of_substeps)
             self.points[1] = calculate_points(self.current_legs_location[1], self.end_points[1], self.heights[1], self.num_of_substeps)
@@ -115,6 +130,12 @@ class Walking_2_legs(Mode):
             print("sensor_active: " + str(self.sensor_active))
             # Note:  The current sensor offset is still in the system, we are not removing it to not cause a sudden leg position jump
             #        It will automatically be removed after one or two steps
+
+        # Change walking direction
+        if 'ddown' in buttons_pressed:
+            self.forward = not self.forward
+            self.wanted_front_angle *= -1
+            print("Walking Forward: " + str(self.forward))
 
         # Pause / UnPause movement
         if 'r1' in buttons_pressed:
