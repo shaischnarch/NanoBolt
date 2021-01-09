@@ -45,12 +45,12 @@ class Walking_2_legs(Mode):
         self.sensor_active = 0
         self.num_of_substeps_sensor_checker = 1
         self.sensor_angle_unit = 5  # it means that every time,we add another correction units for every additional 5 degrees diffrence from wanted angle
-        self.sensor_z_axis_offset_units = 1
+        self.sensor_z_axis_offset_units = 2
         self.sensor_x_axis_offset_units = 1
-        self.sensor_y_axis_offset_units = 1
+        self.sensor_y_axis_offset_units = 0
 
         # define the wanted sensors angles and what is the maximum distance allowed from those angles
-        self.wanted_front_angle = 2
+        self.wanted_front_angle = 0
         self.front_angle_allowed_diff = 1
         self.wanted_side_angle = 0
         self.side_angle_allowed_diff = 1
@@ -61,7 +61,7 @@ class Walking_2_legs(Mode):
         if self.diag == 0:
             self.diag = 1
             self.end_points = Settings.second_diag_default[:]
-            self.heights = [0, self.height, 0, self.height]
+            self.heights = [-5, self.height, -5, self.height]
 
             self.sensor_offset[1] = (0, 0, 0)  # change
             self.sensor_offset[3] = (0, 0, 0)  # change
@@ -71,7 +71,7 @@ class Walking_2_legs(Mode):
         else:
             self.diag = 0
             self.end_points = Settings.first_diag_default[:]
-            self.heights = [self.height, 0, self.height, 0]  # change
+            self.heights = [self.height, -5, self.height, -5]  # change
 
             self.sensor_offset[0] = (0, 0, 0)  # change
             self.sensor_offset[2] = (0, 0, 0)  # change
@@ -112,6 +112,7 @@ class Walking_2_legs(Mode):
         # Activate / DeActivate Sensor
         if 'dup' in buttons_pressed:
             self.sensor_active = not self.sensor_active
+            print("sensor_active: " + str(self.sensor_active))
             # Note:  The current sensor offset is still in the system, we are not removing it to not cause a sudden leg position jump
             #        It will automatically be removed after one or two steps
 
@@ -169,7 +170,7 @@ class Walking_2_legs(Mode):
     def prep_substep(self, sensor):
         if self.current_substep % self.num_of_substeps_sensor_checker == 0 and self.sensor_active == 1:
             self.__Walking_2_legs_sensor_helper(sensor)
-        self.__sum_offsets()
+        self.sum_offsets()
         for leg_num in range(4):
             (point_x, point_y, point_z) = self.points[leg_num][self.current_substep]  # The calculated target location
             (offset_x, offset_y, offset_z) = self.offsets[leg_num]
@@ -200,9 +201,9 @@ class Walking_2_legs(Mode):
         if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
             if (abs(synced_front_angle) > self.front_angle_allowed_diff):
                 ##offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                #offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
                 ##offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                #offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
                 ##offsetsZ[0] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
                 offsetsZ[1] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
@@ -211,9 +212,9 @@ class Walking_2_legs(Mode):
 
             if (abs(synced_side_angle) > self.side_angle_allowed_diff):
                 ##offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                #offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
                 ##offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                #offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
 
                 ##offsetsX[0] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units+int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
                 offsetsX[1] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
@@ -222,9 +223,9 @@ class Walking_2_legs(Mode):
 
         elif self.diag == 1: ## legs 1 and 3 are in the air, legs 0 and 2 on the ground.
             if (abs(synced_front_angle) > self.front_angle_allowed_diff):
-                #offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
                 ## offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                #offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
                 ## offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
                 offsetsZ[0] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
@@ -233,9 +234,9 @@ class Walking_2_legs(Mode):
                 ##offsetsZ[3] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
             if (abs(synced_side_angle) > self.side_angle_allowed_diff):
-                #offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
                 ## offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                #offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
                 ## offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
 
                 offsetsX[0] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))

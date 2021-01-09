@@ -68,7 +68,7 @@ class Mode:
     # @updates: current_legs_location with the real time location, and semi_ideal_current_pos with the semi ideal position
     # todo: might be a cause of error, debug later
     def prep_substep(self, sensor):
-        self.__sum_offsets()
+        self.sum_offsets()
         for leg_num in range(4):
             (point_x, point_y, point_z) = self.points[leg_num][self.current_substep]  # The calculated target location
             (offset_x, offset_y, offset_z) = self.offsets[leg_num]
@@ -90,7 +90,7 @@ class Mode:
     # Method for summing all the internal offsets into offsets
     # @Returns nothing
     # @Updates self.offsets
-    def __sum_offsets(self):
+    def sum_offsets(self):
         for leg_num in range(4):
             (sensor_offset_x, sensor_offset_y, sensor_offset_z) = self.sensor_offset[leg_num]  # Offsets dictated by the sensor
             (controller_offset_x, controller_offset_y, controller_offset_z) = self.controller_offset[leg_num]  # Offsets set by the user with the controller - for example raise robot height

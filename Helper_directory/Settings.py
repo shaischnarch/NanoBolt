@@ -33,7 +33,7 @@ __default_y = -135
 __default_z = 0
 
 
-__legs_offset = [(-12,-15,10),(0,-10,10),(0,-18,-23),(13,-20,-8)]  # the offset for each leg relative to regular step (legs 0,1,2,3)
+__legs_offset = [(-12,-15,9),(0,-10,11),(0,-14,-35),(13,-16,-25)]  # the offset for each leg relative to regular step (legs 0,1,2,3)
 #legs_offset = [(0,0,0),(0,0,0),(0,-15,-35),(0,-15,-35)]
 
 sensor_offset = (0,0,2)  # when standing level (measured using a level) the values of the sensor where (-, 0, -2)
