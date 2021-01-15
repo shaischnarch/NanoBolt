@@ -80,18 +80,23 @@ stable_3_legs_left_default = __ideal_to_semiIdeal(__ideal_stable_3_legs_left)  #
 
 ### TEST TODO: implement or delete ###
 ## Walking 2 legs:
-#__first_diag_offset = [(0,0,25), (0,0,-25), (0,0,25), (0,0,-25)]  # first diag is legs 0,2 in the forward position
-__first_diag_offset = [(0,0,17), (0,0,-33), (0,0,17), (0,0,-33)]  # first diag is legs 0,2 in the forward position
-__ideal_first_diag = __offset_from_stand(__first_diag_offset)
-first_diag_default = __ideal_to_semiIdeal(__ideal_first_diag)
+#forwards: When walking forwards in a straight line
+__first_diag_forward_offset = [(0,0,17), (0,0,-33), (0,0,17), (0,0,-33)]  # first diag is legs 0,2 in the forward position
+__ideal_first_diag_forward = __offset_from_stand(__first_diag_forward_offset)
+first_diag_forward_default = __ideal_to_semiIdeal(__ideal_first_diag_forward)
 
-__second_diag_offset = [(0,0,-33), (0,0,17), (0,0,-33), (0,0,17)]  # second diag is legs 1,3 in the forward position
-#__second_diag_offset = [(0,-15,-20), (0,-15,20), (0,-25,-20), (0,-25,20)]  # second diag is legs 1,3 in the forward position
-__ideal_second_diag = __offset_from_stand(__second_diag_offset)
-second_diag_default = __ideal_to_semiIdeal(__ideal_second_diag)
+__second_diag_forward_offset = [(0,0,-33), (0,0,17), (0,0,-33), (0,0,17)]  # second diag is legs 1,3 in the forward position
+__ideal_second_diag_forward = __offset_from_stand(__second_diag_forward_offset)
+second_diag_forward_default = __ideal_to_semiIdeal(__ideal_second_diag_forward)
 
+#backwards: when walking backwards in a straight line
+__first_diag_backward_offset = [(0,0,-25), (0,0,25), (0,0,-25), (0,0,25)]  # first diag is legs 0,2 in the forward position
+__ideal_first_diag_backward = __offset_from_stand(__first_diag_backward_offset)
+first_diag_backward_default = __ideal_to_semiIdeal(__ideal_first_diag_backward)
 
-
+__second_diag_backward_offset = [(0,0,25), (0,0,-25), (0,0,25), (0,0,-25)]  # second diag is legs 1,3 in the forward position
+__ideal_second_diag_backward = __offset_from_stand(__second_diag_backward_offset)
+second_diag_backward_default = __ideal_to_semiIdeal(__ideal_second_diag_backward)
 
 ## max absolute value of leg X value
 max_X = 90

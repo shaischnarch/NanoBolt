@@ -44,7 +44,7 @@ class Mode:
     # @Resets: is_finished_step = false, current_substep = 0
     # @Returns nothing
     def calculate_points(self):
-        for leg_num in range(4):  # todo: change self.current_legs_location to the end of points (the ideal location of the start of the step), and make sure it works
+        for leg_num in range(4):
             self.points[leg_num] = calculate_points(self.semi_ideal_current_pos[leg_num], self.end_points[leg_num], self.heights[leg_num],
                                                     self.num_of_substeps)
         # self.current_substep = 0

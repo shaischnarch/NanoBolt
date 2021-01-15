@@ -61,6 +61,27 @@ class Walking_2_legs(Mode):
 
         if self.diag == 0:
             self.diag = 1
+            self.heights = [0, self.height, 0, self.height]
+            if self.forward:
+                self.end_points = Settings.second_diag_forward_default[:]
+            else:
+                self.end_points = Settings.second_diag_backward_default[:]
+
+        else:
+            self.diag = 0
+            self.heights = [self.height, 0, self.height, 0]  # change
+            if self.forward:
+                self.end_points = Settings.first_diag_forward_default[:]
+            else:
+                self.end_points = Settings.first_diag_backward_default[:]
+
+
+
+
+
+    """
+        if self.diag == 0:
+            self.diag = 1
             self.end_points = Settings.second_diag_default[:]
             if self.forward:
                 self.heights = [0, self.height, 0, self.height]
@@ -91,16 +112,26 @@ class Walking_2_legs(Mode):
                 self.sensor_offset[3] = (0, 0, 0)  # change
                 self.controller_offset[1] = (0, 0, 0)  # change
                 self.controller_offset[3] = (0, 0, 0)  # change
-
+    """
 
 
     # @OVERRIDE - add the ability to calculate the removal of offsets for the correct legs
     # Main function for calculating all the substeps locations along the a step.
     # Therefore it is called only after plan_movement and it finishes setting up the new step.
     # @Receives: nothing
-    # @Resets: is_finished_step = false, current_substep = 0
+    # @Resets: is_finished_step = false, current_substep = 1
     # @Returns nothing
     def calculate_points(self):
+        for leg_num in range(4):
+            # For this mode, we want to remove the phisical offsets after each step, for this reason we calculate points from current legs location and not semi ideal
+            self.points[leg_num] = calculate_points(self.current_legs_location[leg_num], self.end_points[leg_num], self.heights[leg_num],
+                                                    self.num_of_substeps)
+            self.sensor_offset[leg_num] = (0, 0, 0)  # change
+            self.controller_offset[leg_num] = (0, 0, 0)  # change
+        # self.current_substep = 0
+        self.current_substep = 1  # EXPERIMENTAL, might need to be lowered back down to 0
+        self.is_finished_step = False
+        """
         if (self.diag == 1 and self.forward) or (self.diag == 0 and not self.forward):
             self.points[0] = calculate_points(self.semi_ideal_current_pos[0], self.end_points[0], self.heights[0], self.num_of_substeps)
             self.points[2] = calculate_points(self.semi_ideal_current_pos[2], self.end_points[2], self.heights[2], self.num_of_substeps)
@@ -114,6 +145,7 @@ class Walking_2_legs(Mode):
         # self.current_substep = 0
         self.current_substep = 1  # EXPERIMENTAL, might need to be lowered back down to 0
         self.is_finished_step = False
+        """
 
 
 
