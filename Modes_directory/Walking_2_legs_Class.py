@@ -15,7 +15,7 @@ class Walking_2_legs(Mode):
         Mode.__init__(self, current_legs_location)
 
         # offset from stand position
-        self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.first_diag_default[:], self.current_legs_location)
+        self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.first_diag_forward_default[:], self.current_legs_location)
 
         self.pause_movement = False
         self.is_finished_step = True
