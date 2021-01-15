@@ -57,7 +57,7 @@ class Walking_2_legs(Mode):
         self.side_angle_allowed_diff = 3
 
         #temp for combined sensor
-        self.sensor_angle_allowed_diff = 2
+        self.sensor_angle_allowed_diff = 1
 
     #OVERRIDE
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
