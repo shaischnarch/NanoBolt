@@ -48,7 +48,7 @@ class Walking_2_legs(Mode):
         self.sensor_angle_unit = 5  # it means that every time,we add another correction units for every additional 5 degrees diffrence from wanted angle
         self.sensor_z_axis_offset_units = 1
         self.sensor_x_axis_offset_units = 1
-        self.sensor_y_axis_offset_units = 0
+        self.sensor_y_axis_offset_units = 1
 
         # define the wanted sensors angles and what is the maximum distance allowed from those angles
         self.wanted_front_angle = 0
