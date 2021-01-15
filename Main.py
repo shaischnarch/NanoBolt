@@ -84,7 +84,7 @@ while True:
 					elif 'l1' in buttons_pressed:  # L2 button on ps4 controller
 						current_mode = Walking_2_legs_Class.Walking_2_legs(current_mode.current_legs_location)
 					elif 'dright' in buttons_pressed:  # L2 button on ps4 controller
-						current_mode = CrabWalking_2_legs_Class.Walking_2_legs(current_mode.current_legs_location)
+						current_mode = CrabWalking_2_legs_Class.CrabWalking_2_legs(current_mode.current_legs_location)
 					#___________
 					#___________
 					#___________
