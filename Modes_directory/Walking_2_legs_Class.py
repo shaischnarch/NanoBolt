@@ -56,6 +56,9 @@ class Walking_2_legs(Mode):
         self.wanted_side_angle = 0
         self.side_angle_allowed_diff = 3
 
+        #temp for combined sensor
+        self.sensor_angle_allowed_diff = 2
+
     #OVERRIDE
     def plan_movement(self, left_cx, left_cy, right_cx, right_cy, buttons_pressed):
 
@@ -251,6 +254,42 @@ class Walking_2_legs(Mode):
 
         synced_front_angle = euler2 - self.wanted_front_angle
         synced_side_angle = euler3 - self.wanted_side_angle
+
+        sensor_product = synced_front_angle * synced_side_angle
+
+        if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
+            if sensor_product < -self.sensor_angle_allowed_diff:  #sensor_product must be negative
+                if synced_front_angle > 0:  #fell forward left
+                    offsetsZ[1] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[1] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+                    offsetsZ[3] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[3] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+                else:  #fell backwards right
+                    offsetsZ[1] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[1] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+                    offsetsZ[3] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[3] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+        else:  # diag == 1
+            if sensor_product > self.sensor_angle_allowed_diff:
+                if synced_front_angle > 0:  #fell forward right
+                    offsetsZ[0] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[0] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+                    offsetsZ[2] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[2] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+                else:  #fell backwards left
+                    offsetsZ[0] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[0] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+                    offsetsZ[2] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                    offsetsX[2] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+
+        """
         if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
             if (abs(synced_front_angle) > self.front_angle_allowed_diff):
                 ##offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
@@ -296,6 +335,8 @@ class Walking_2_legs(Mode):
                 ##offsetsX[1] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
                 offsetsX[2] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
                 ##offsetsX[3] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+        """
+
 
         for j in range(4):
             lst = list(self.sensor_offset[j])
