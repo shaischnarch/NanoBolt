@@ -9,17 +9,17 @@ from Modes_directory.Mode_Class import Mode
 ## Walking mode where both legs that are diagonal to each other do the same operation at the same time
 # FOR NOW this class is a test for the feasibility of the mode
 # TODO: After tests, if mode is feasible, implement the proper mode
-class Walking_2_legs(Mode):
+class CrabWalking_2_legs(Mode):
 
     def __init__(self, current_legs_location):
         Mode.__init__(self, current_legs_location)
 
         # offset from stand position
-        self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.first_diag_forward_default[:], self.current_legs_location)
+        self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.first_diag_right_default[:], self.current_legs_location)
 
         self.pause_movement = False
         self.is_finished_step = True
-        self.forward = True  # when true walk forward, false walk backwards
+        self.right = True  # when true walk forward, false walk backwards
 
         # 0 means that the current step being executed is from second diag to first, 1 means the opposite
         # when diag is 0, legs 0,2 move forward in the air, and 1,3 backwards on the ground
@@ -65,18 +65,18 @@ class Walking_2_legs(Mode):
         if self.diag == 0:
             self.diag = 1
             self.heights = [0, self.height, 0, self.height]
-            if self.forward:
-                self.end_points = Settings.second_diag_forward_default[:]
+            if self.right:
+                self.end_points = Settings.second_diag_right_default[:]
             else:
-                self.end_points = Settings.second_diag_backward_default[:]
+                self.end_points = Settings.second_diag_left_default[:]
 
         else:
             self.diag = 0
             self.heights = [self.height, 0, self.height, 0]  # change
-            if self.forward:
-                self.end_points = Settings.first_diag_forward_default[:]
+            if self.right:
+                self.end_points = Settings.first_diag_right_default[:]
             else:
-                self.end_points = Settings.first_diag_backward_default[:]
+                self.end_points = Settings.first_diag_left_default[:]
 
 
 
@@ -168,9 +168,9 @@ class Walking_2_legs(Mode):
 
         # Change walking direction
         if 'ddown' in buttons_pressed:
-            self.forward = not self.forward
+            self.right = not self.right
             self.wanted_front_angle *= -1
-            print("Walking Forward: " + str(self.forward))
+            print("Walking right: " + str(self.right))
 
         # Pause / UnPause movement
         if 'r1' in buttons_pressed:

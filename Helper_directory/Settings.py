@@ -100,6 +100,31 @@ __second_diag_backward_offset = [(0,0,20), (0,0,-20), (0,0,20), (0,0,-20)]  # se
 __ideal_second_diag_backward = __offset_from_stand(__second_diag_backward_offset)
 second_diag_backward_default = __ideal_to_semiIdeal(__ideal_second_diag_backward)
 
+
+## CrabWalking 2 legs:
+#right: When walking right in a straight line
+__first_diag_right_offset = [(15,0,0), (15,0,0), (-15,0,0), (-15,0,0)]  # first diag is legs 0,2 in the forward position
+__ideal_first_diag_right = __offset_from_stand(__first_diag_right_offset)
+first_diag_right_default = __ideal_to_semiIdeal(__ideal_first_diag_right)
+
+__second_diag_right_offset = [(-15,0,0), (-15,0,0), (15,0,0), (15,0,0)]  # second diag is legs 1,3 in the forward position
+__ideal_second_diag_right = __offset_from_stand(__second_diag_right_offset)
+second_diag_right_default = __ideal_to_semiIdeal(__ideal_second_diag_right)
+
+#left: when walking left in a straight line
+#__first_diag_backward_offset = [(0,0,-25), (0,0,25), (0,0,-25), (0,0,25)]  # first diag is legs 0,2 in the forward position
+__first_diag_left_offset = [(-15,0,0), (-15,0,0), (15,0,0), (15,0,0)]  # first diag is legs 0,2 in the forward position
+__ideal_first_diag_left = __offset_from_stand(__first_diag_left_offset)
+first_diag_left_default = __ideal_to_semiIdeal(__ideal_first_diag_left)
+
+#__second_diag_backward_offset = [(0,0,25), (0,0,-25), (0,0,25), (0,0,-25)]  # second diag is legs 1,3 in the forward position
+__second_diag_left_offset = [(15,0,0), (15,0,0), (-15,0,0), (-15,0,0)]  # second diag is legs 1,3 in the forward position
+__ideal_second_diag_left = __offset_from_stand(__second_diag_left_offset)
+second_diag_left_default = __ideal_to_semiIdeal(__ideal_second_diag_left)
+
+
+
+
 ## max absolute value of leg X value
 max_X = 90
 

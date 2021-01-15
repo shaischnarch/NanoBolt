@@ -1,7 +1,7 @@
 from Calculations.All_calculations import *
 from Excution.All_executions import *
 from Plan.All_Plans import *
-from Modes_directory import Mode_Class, Stable_4_legs_Class, Stable_3_legs_Class, Walking_2_legs_Class
+from Modes_directory import Mode_Class, Stable_4_legs_Class, Stable_3_legs_Class, Walking_2_legs_Class, CrabWalking_2_legs_Class
 from Helper_directory.Main_helper import *
 from Helper_directory import Settings
 
@@ -83,6 +83,8 @@ while True:
 						current_mode = Stable_3_legs_Class.Stable_3_legs(current_mode.current_legs_location)
 					elif 'l1' in buttons_pressed:  # L2 button on ps4 controller
 						current_mode = Walking_2_legs_Class.Walking_2_legs(current_mode.current_legs_location)
+					elif 'dright' in buttons_pressed:  # L2 button on ps4 controller
+						current_mode = CrabWalking_2_legs_Class.Walking_2_legs(current_mode.current_legs_location)
 					#___________
 					#___________
 					#___________
