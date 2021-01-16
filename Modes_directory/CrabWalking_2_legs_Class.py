@@ -54,7 +54,7 @@ class CrabWalking_2_legs(Mode):
         self.wanted_front_angle = 0
         self.front_angle_allowed_diff = 1
         self.wanted_side_angle = 0
-        self.side_angle_allowed_diff = 3
+        self.side_angle_allowed_diff = 1
 
         #temp for combined sensor
         self.sensor_angle_allowed_diff = 1
@@ -186,13 +186,17 @@ class CrabWalking_2_legs(Mode):
                 print("Updated current num of substeps to: " + str(self.num_of_substeps))
             else:
                 print("Num of substep is already in it's max value: "+ str(self.max_num_of_substep) )
-        elif 'dleft' in buttons_pressed:
-            if self.num_of_substeps>self.min_num_of_substep:
-                self.num_of_substeps -= self.num_of_substeps_jumps
-                print("Updated current num of substeps to: " + str(self.num_of_substeps))
-            else:
-                print("Num of substep is already in it's min value: " + str(self.min_num_of_substep))
         """
+        if 'dleft' in buttons_pressed:
+            self.sensor_angle_allowed_diff += 0.1
+            if self.sensor_angle_allowed_diff > 2.5:
+                self.sensor_angle_allowed_diff = 0.5
+            self.side_angle_allowed_diff += 0.1
+            if self.side_angle_allowed_diff > 3:
+                self.side_angle_allowed_diff = 0.7
+            print("sensor_angle_allowed_diff (sensor_active == 1): " + str(self.sensor_angle_allowed_diff))
+            print("side_angle_allowed_diff (sensor_active == 2): " + str(self.side_angle_allowed_diff))
+
 
         #change height, war
         if left_cy > 0 and self.height < self.max_leg_height:
