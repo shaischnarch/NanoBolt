@@ -276,6 +276,12 @@ class CrabWalking_2_legs(Mode):
 
                         offsetsZ[3] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
                         offsetsX[3] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        if synced_front_angle > -sensor_product/2:
+                            offsetsY[1] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[3] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        else:
+                            offsetsY[1] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[3] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
 
                     else:  #fell backwards right
                         offsetsZ[1] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
@@ -283,6 +289,13 @@ class CrabWalking_2_legs(Mode):
 
                         offsetsZ[3] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
                         offsetsX[3] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        if synced_front_angle < sensor_product/2:
+                            offsetsY[1] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[3] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        else:
+                            offsetsY[1] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[3] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+
 
             else:  # diag == 1
                 if sensor_product > self.sensor_angle_allowed_diff:
@@ -292,6 +305,12 @@ class CrabWalking_2_legs(Mode):
 
                         offsetsZ[2] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
                         offsetsX[2] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        if synced_front_angle > sensor_product/2:
+                            offsetsY[0] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[2] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        else:
+                            offsetsY[0] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[2] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
 
                     else:  #fell backwards left
                         offsetsZ[0] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
@@ -299,6 +318,12 @@ class CrabWalking_2_legs(Mode):
 
                         offsetsZ[2] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
                         offsetsX[2] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        if synced_front_angle < -sensor_product/2:
+                            offsetsY[2] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[0] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        else:
+                            offsetsY[2] += self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                            offsetsY[0] -= self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
         else:
             if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
                 if (abs(synced_front_angle) > self.front_angle_allowed_diff):
