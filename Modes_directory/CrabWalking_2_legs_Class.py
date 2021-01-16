@@ -161,7 +161,8 @@ class CrabWalking_2_legs(Mode):
     # change (all of that)
         # Activate / DeActivate Sensor
         if 'dup' in buttons_pressed:
-            self.sensor_active = not self.sensor_active
+            self.sensor_active += 1
+            self.sensor_active = self.sensor_active % 3
             print("sensor_active: " + str(self.sensor_active))
             # Note:  The current sensor offset is still in the system, we are not removing it to not cause a sudden leg position jump
             #        It will automatically be removed after one or two steps
@@ -227,7 +228,7 @@ class CrabWalking_2_legs(Mode):
     # @updates: current_legs_location with the real time location, and semi_ideal_current_pos with the semi ideal position
     # todo: might be a cause of error, debug later
     def prep_substep(self, sensor):
-        if self.current_substep % self.num_of_substeps_sensor_checker == 0 and self.sensor_active == 1:
+        if self.current_substep % self.num_of_substeps_sensor_checker == 0 and self.sensor_active != 0:
             self.__Walking_2_legs_sensor_helper(sensor)
         self.sum_offsets()
         for leg_num in range(4):
@@ -258,87 +259,88 @@ class CrabWalking_2_legs(Mode):
         synced_front_angle = euler2 - self.wanted_front_angle
         synced_side_angle = euler3 - self.wanted_side_angle
 
-        sensor_product = synced_front_angle * synced_side_angle
 
-        if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
-            if sensor_product < -self.sensor_angle_allowed_diff:  #sensor_product must be negative
-                if synced_front_angle > 0:  #fell forward left
-                    offsetsZ[1] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[1] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-                    offsetsZ[3] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[3] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+        if self.sensor_active == 1:
+            sensor_product = synced_front_angle * synced_side_angle
 
-                else:  #fell backwards right
-                    offsetsZ[1] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[1] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+            if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
+                if sensor_product < -self.sensor_angle_allowed_diff:  #sensor_product must be negative
+                    if synced_front_angle > 0:  #fell forward left
+                        offsetsZ[1] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[1] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-                    offsetsZ[3] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[3] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        offsetsZ[3] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[3] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-        else:  # diag == 1
-            if sensor_product > self.sensor_angle_allowed_diff:
-                if synced_front_angle > 0:  #fell forward right
-                    offsetsZ[0] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[0] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                    else:  #fell backwards right
+                        offsetsZ[1] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[1] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-                    offsetsZ[2] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[2] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        offsetsZ[3] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[3] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-                else:  #fell backwards left
-                    offsetsZ[0] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[0] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+            else:  # diag == 1
+                if sensor_product > self.sensor_angle_allowed_diff:
+                    if synced_front_angle > 0:  #fell forward right
+                        offsetsZ[0] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[0] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-                    offsetsZ[2] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
-                    offsetsX[2] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+                        offsetsZ[2] += self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[2] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-        """
-        if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
-            if (abs(synced_front_angle) > self.front_angle_allowed_diff):
-                ##offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                ##offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    else:  #fell backwards left
+                        offsetsZ[0] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[0] -= self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
 
-                ##offsetsZ[0] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                offsetsZ[1] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                ##offsetsZ[2] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                offsetsZ[3] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                        offsetsZ[2] -= self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit)
+                        offsetsX[2] += self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit)
+        else:
+            if self.diag == 0:  ## legs 0 and 2 are in the air, while legs 1 and 3 on the ground
+                if (abs(synced_front_angle) > self.front_angle_allowed_diff):
+                    ##offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ##offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
-            if (abs(synced_side_angle) > self.side_angle_allowed_diff):
-                ##offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                ##offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ##offsetsZ[0] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    offsetsZ[1] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ##offsetsZ[2] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    offsetsZ[3] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
-                ##offsetsX[0] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units+int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                offsetsX[1] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                ##offsetsX[2] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                offsetsX[3] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                if (abs(synced_side_angle) > self.side_angle_allowed_diff):
+                    ##offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ##offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
 
-        elif self.diag == 1: ## legs 1 and 3 are in the air, legs 0 and 2 on the ground.
-            if (abs(synced_front_angle) > self.front_angle_allowed_diff):
-                offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                ## offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                ## offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ##offsetsX[0] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units+int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsX[1] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ##offsetsX[2] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsX[3] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
 
-                offsetsZ[0] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                ##offsetsZ[1] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                offsetsZ[2] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
-                ##offsetsZ[3] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+            elif self.diag == 1: ## legs 1 and 3 are in the air, legs 0 and 2 on the ground.
+                if (abs(synced_front_angle) > self.front_angle_allowed_diff):
+                    offsetsY[0] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ## offsetsY[1] -= np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    offsetsY[2] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ## offsetsY[3] += np.sign(synced_front_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
-            if (abs(synced_side_angle) > self.side_angle_allowed_diff):
-                offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                ## offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                ## offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsZ[0] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ##offsetsZ[1] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    offsetsZ[2] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
+                    ##offsetsZ[3] += np.sign(synced_front_angle) * (self.sensor_z_axis_offset_units + int(math.fabs(synced_front_angle) / self.sensor_angle_unit))
 
-                offsetsX[0] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                ##offsetsX[1] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                offsetsX[2] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-                ##offsetsX[3] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
-        """
+                if (abs(synced_side_angle) > self.side_angle_allowed_diff):
+                    offsetsY[0] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ## offsetsY[1] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsY[2] -= np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ## offsetsY[3] += np.sign(synced_side_angle) * (self.sensor_y_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+
+                    offsetsX[0] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ##offsetsX[1] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    offsetsX[2] -= np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
+                    ##offsetsX[3] += np.sign(synced_side_angle) * (self.sensor_x_axis_offset_units + int(math.fabs(synced_side_angle) / self.sensor_angle_unit))
 
 
         for j in range(4):
