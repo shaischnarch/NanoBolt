@@ -85,9 +85,10 @@ while True:
 						current_mode = Walking_2_legs_Class.Walking_2_legs(current_mode.current_legs_location)
 					elif 'dright' in buttons_pressed:  # L2 button on ps4 controller
 						current_mode = CrabWalking_2_legs_Class.CrabWalking_2_legs(current_mode.current_legs_location)
-					else:
-						print(buttons_pressed)
-					#todo: elif 'r3' in buttons_pressed:  #find what button is r3
+					elif 'l2' in buttons_pressed:
+						current_mode = Spin_2_legs_Class.Spin_2_legs(current_mode.current_legs_location)
+					#else:
+					#	print(buttons_pressed) 
 					#___________
 					#___________
 					#___________
