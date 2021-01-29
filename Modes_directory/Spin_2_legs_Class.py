@@ -6,26 +6,26 @@ import math
 from Modes_directory.Mode_Class import Mode
 
 
-## CrabWalking mode where both legs that are diagonal to each other do the same operation at the same time
+## Spinning mode where both legs that are diagonal to each other do the same operation at the same time
 # FOR NOW this class is a test for the feasibility of the mode
 # TODO: After tests, if mode is feasible, implement the proper mode
-class CrabWalking_2_legs(Mode):
+class Spin_2_legs(Mode):
 
     def __init__(self, current_legs_location):
         Mode.__init__(self, current_legs_location)
 
         # offset from stand position
-        self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.first_diag_right_default[:], self.current_legs_location)
+        self.semi_ideal_current_pos, self.current_legs_location = move_to_position(Settings.first_diag_spinR_default[:], self.current_legs_location)
 
         self.pause_movement = False
         self.is_finished_step = True
-        self.right = True  # when true walk forward, false walk backwards
+        self.right = True  # when true spin right - clockwise, false spin left - counter-clockwise
 
         # 0 means that the current step being executed is from second diag to first, 1 means the opposite
         # when diag is 0, legs 0,2 move forward in the air, and 1,3 backwards on the ground
         self.diag = 0
 
-        self.height_jumps = 1 # change for testing
+        self.height_jumps = 1  # change for testing
         self.max_leg_height = 30  # the max height offset from the controller (in both up and down directions)
         self.height = 15 ## staring height # change for height limition
         # the leg position controlled by the left stick
@@ -66,17 +66,17 @@ class CrabWalking_2_legs(Mode):
             self.diag = 1
             self.heights = [0, self.height, 0, self.height]
             if self.right:
-                self.end_points = Settings.second_diag_right_default[:]
+                self.end_points = Settings.second_diag_spinR_default[:]
             else:
-                self.end_points = Settings.second_diag_left_default[:]
+                self.end_points = Settings.second_diag_spinL_default[:]
 
         else:
             self.diag = 0
             self.heights = [self.height, 0, self.height, 0]  # change
             if self.right:
-                self.end_points = Settings.first_diag_right_default[:]
+                self.end_points = Settings.first_diag_spinR_default[:]
             else:
-                self.end_points = Settings.first_diag_left_default[:]
+                self.end_points = Settings.first_diag_spinL_default[:]
 
 
 
@@ -167,11 +167,11 @@ class CrabWalking_2_legs(Mode):
             # Note:  The current sensor offset is still in the system, we are not removing it to not cause a sudden leg position jump
             #        It will automatically be removed after one or two steps
 
-        # Change walking direction
+        # Change spinning direction
         if 'ddown' in buttons_pressed:
             self.right = not self.right
             self.wanted_front_angle *= -1
-            print("Walking right: " + str(self.right))
+            print("Spinning right: " + str(self.right))
 
         # Pause / UnPause movement
         if 'r1' in buttons_pressed:
@@ -233,7 +233,7 @@ class CrabWalking_2_legs(Mode):
     # todo: might be a cause of error, debug later
     def prep_substep(self, sensor):
         if self.current_substep % self.num_of_substeps_sensor_checker == 0 and self.sensor_active != 0:
-            self.__CrabWalking_2_legs_sensor_helper(sensor)
+            self.__Spin_2_legs_sensor_helper(sensor)
         self.sum_offsets()
         for leg_num in range(4):
             (point_x, point_y, point_z) = self.points[leg_num][self.current_substep]  # The calculated target location
@@ -253,7 +253,7 @@ class CrabWalking_2_legs(Mode):
 
 
 
-    def __CrabWalking_2_legs_sensor_helper(self, sensor):
+    def __Spin_2_legs_sensor_helper(self, sensor):
         (euler1, euler2, euler3) = read_sensor(sensor)
         print((euler1, euler2, euler3))
         offsetsX = [0, 0, 0, 0]

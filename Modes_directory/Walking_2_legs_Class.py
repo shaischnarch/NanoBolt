@@ -33,7 +33,7 @@ class Walking_2_legs(Mode):
         # change for testing
         # define max and min number of substep:
         self.num_of_substeps_jumps = 2
-        self.max_num_of_substep = 36
+        self.max_num_of_substep = 32
         self.min_num_of_substep = 4
 
         # change for testing
