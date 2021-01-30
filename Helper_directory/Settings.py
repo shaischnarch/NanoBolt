@@ -124,23 +124,19 @@ second_diag_left_default = __ideal_to_semiIdeal(__ideal_second_diag_left)
 
 ## Spin 2 legs:
 #right: When spinning right - clockwise
-#__first_diag_spinR_offset = [(20,0,15), (20,0,15), (20,0,-19), (20,0,-19)]  # first diag is legs 0,2 in the forward position -bigger step
 __first_diag_spinR_offset = [(18,0,13), (18,0,13), (18,0,-18), (18,0,-18)]  # first diag is legs 0,2 in the forward position -bigger step
 __ideal_first_diag_spinR = __offset_from_stand(__first_diag_spinR_offset)
 first_diag_spinR_default = __ideal_to_semiIdeal(__ideal_first_diag_spinR)
 
-#__second_diag_spinR_offset = [(-20,0,-15), (-20,0,-15), (-20,0,9), (-20,0,9)]  # second diag is legs 1,3 in the forward position
 __second_diag_spinR_offset = [(-18,0,-13), (-18,0,-13), (-18,0,8), (-18,0,8)]  # second diag is legs 1,3 in the forward position
 __ideal_second_diag_spinR = __offset_from_stand(__second_diag_spinR_offset)
 second_diag_spinR_default = __ideal_to_semiIdeal(__ideal_second_diag_spinR)
 
 #left: when spinning left - counter-clockwise
-#__first_diag_spinL_offset = [(-20,0,-15), (-20,0,-15), (-20,0,9), (-20,0,9)]  # first diag is legs 0,2 in the forward position
 __first_diag_spinL_offset = [(-18,0,-13), (-18,0,-13), (-18,0,8), (-18,0,8)]  # first diag is legs 0,2 in the forward position
 __ideal_first_diag_spinL = __offset_from_stand(__first_diag_spinL_offset)
 first_diag_spinL_default = __ideal_to_semiIdeal(__ideal_first_diag_spinL)
 
-#__second_diag_spinL_offset = [(20,0,15), (20,0,15), (20,0,-19), (20,0,-19)]  # second diag is legs 1,3 in the forward position
 __second_diag_spinL_offset = [(18,0,13), (18,0,13), (18,0,-18), (18,0,-18)]  # second diag is legs 1,3 in the forward position
 __ideal_second_diag_spinL = __offset_from_stand(__second_diag_spinL_offset)
 second_diag_spinL_default = __ideal_to_semiIdeal(__ideal_second_diag_spinL)
